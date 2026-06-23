@@ -541,7 +541,8 @@ async function deepRead(key,chart,persp){
     if(!resp.ok){ let t=''; try{t=((await resp.json()).error||{}).message||'';}catch(e){} throw new Error(resp.status+(t?'：'+t:'')); }
     const data=await resp.json(); return (data.content||[]).map(b=>b.text||'').join('').trim();
   }
-  throw new Error(backendErr?('后端：'+backendErr):'付费版即将开放；现在可展开下方体验模式，填入你自己的 Anthropic key 先免费试。');
+  if(backendErr){ try{ console.warn('[deep] 后端：'+backendErr); }catch(e){} }
+  throw new Error('深度解读（付费版）即将开放。现在可展开下方「体验模式」，填入你自己的 Anthropic key 先免费体验（key 仅存于本地浏览器，不上传）。');
 }
 
 (function initYuan(){
