@@ -1,0 +1,12 @@
+{
+  "name": "xuan-zhengyuan-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "玄 · 正缘深度解读后端骨架（密钥在服务端，前端零密钥）",
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
