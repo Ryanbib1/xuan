@@ -36,7 +36,7 @@ body[data-board="sign"] #b-sign, body[data-board="huangli"] #b-huangli, body[dat
 #tarot-stage{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:20px 0 6px; min-height:190px; }
 #thint{ display:none; font-size:11px; letter-spacing:.2em; color:var(--jade); text-align:center; opacity:.85; margin-bottom:8px; }
 .tcard{ display:flex; flex-direction:column; align-items:center; }
-.tflip{ width:100px; height:158px; perspective:900px; cursor:pointer; }
+.tflip{ position:relative; width:100px; height:158px; perspective:900px; cursor:pointer; }
 .tinner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .75s cubic-bezier(.4,0,.2,1); }
 .tcard.flipped .tinner{ transform:rotateY(180deg); }
 .tface{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
@@ -53,6 +53,27 @@ body[data-board="sign"] #b-sign, body[data-board="huangli"] #b-huangli, body[dat
 .tarot-read{ margin-top:18px; opacity:0; transition:opacity .6s ease; text-align:left; } .tarot-read.show{ opacity:1; }
 .tline{ font-size:14px; line-height:1.9; color:#d6cfb8; font-weight:300; margin-bottom:8px; } .tline b{ color:var(--gold); font-weight:500; }
 .tsyn{ font-size:14px; line-height:1.95; color:#e7dcc0; margin-top:12px; padding-top:14px; border-top:1px solid rgba(232,200,115,.2); } .tsyn b{ color:var(--jade); }
+/* 塔罗 · 模式切换 + 牌阵副题 */
+#tmodes{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin:8px 0 4px; }
+#tmodes button{ background:rgba(255,255,255,.04); border:1px solid rgba(232,200,115,.25); color:#cfc6aa; border-radius:999px; padding:6px 14px; cursor:pointer; font-family:'Noto Serif SC',serif; font-size:12px; letter-spacing:.08em; transition:all .2s ease; }
+#tmodes button:hover{ color:#e9dcb6; }
+#tmodes button.on{ background:linear-gradient(180deg,#c5352f,#9c241f); color:var(--paper); border-color:transparent; box-shadow:0 0 12px rgba(181,48,43,.35); }
+#tmodes button:focus-visible{ outline:none; box-shadow:0 0 0 2px rgba(232,200,115,.4); }
+.tsub2{ font-size:11px; color:#9a937c; text-align:center; letter-spacing:.1em; margin-bottom:6px; }
+.tnum.m-major{ color:var(--gold); }
+/* 逆位标记 */
+.tcard.rev .tfront{ background:linear-gradient(180deg,#2c1620,#1a1016); border-color:#caa14e; }
+.tcard.flipped.rev .tflip::after{ content:'逆'; position:absolute; z-index:3; top:6px; left:6px; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#eaa45c; background:rgba(0,0,0,.55); border:1px solid rgba(224,164,90,.6); border-radius:4px; }
+/* 凯尔特十字布局 */
+.tstage-celtic{ flex-direction:column; gap:20px; min-height:auto; }
+.celtic-cross{ display:grid; grid-template-columns:repeat(3,auto); grid-template-areas:". c5 ." "c4 c1 c6" ". c3 ." ". c2 ."; gap:10px 12px; justify-content:center; align-items:start; }
+.cc1{grid-area:c1} .cc2{grid-area:c2} .cc3{grid-area:c3} .cc4{grid-area:c4} .cc5{grid-area:c5} .cc6{grid-area:c6}
+.celtic-staff{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.celtic-staff::before{ content:'支 柱'; width:100%; text-align:center; font-size:10px; letter-spacing:.3em; color:#7c7660; margin-bottom:-6px; }
+.tstage-celtic .tflip{ width:60px; height:95px; }
+.tstage-celtic .tb-glyph{ font-size:24px; }
+.tstage-celtic .tnum{ font-size:12px; } .tstage-celtic .tzh{ font-size:12px; margin-top:2px; } .tstage-celtic .ten{ display:none; }
+.tstage-celtic .tkw{ font-size:9px; padding:2px 6px; margin-top:5px; } .tstage-celtic .tcard .tpos{ font-size:9px; letter-spacing:.06em; text-indent:0; margin-top:5px; }
 #b-huangli{ max-width:480px; }
 .hl-zhishen{ display:flex; align-items:baseline; justify-content:center; gap:14px; margin:10px 0 4px; }
 .hl-jc{ font-family:'Noto Serif SC',serif; font-weight:900; font-size:56px; color:var(--gold); text-shadow:0 0 20px rgba(232,200,115,.4); }
@@ -215,8 +236,10 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
 
   <div id="b-tarot" class="board">
     <div class="panel tarot-panel">
-      <div class="phead">塔 罗 · 三 牌 阵</div>
-      <div class="psub">现状 · 阻碍 · 指引 —— 心中默想一个问题，再洗牌</div>
+      <div class="phead">塔 罗</div>
+      <div class="psub">韦特体系 78 张 · 含正逆位 · 参考非预言</div>
+      <div id="tmodes"><button data-m="daily" class="on">每日一塔罗</button><button data-m="three">三牌阵</button><button data-m="celtic">凯尔特十字</button></div>
+      <div class="tsub2" id="tsub2"></div>
       <div id="thint">✦ 轻 触 牌 面 · 逐 张 翻 开 ✦</div>
       <div id="tarot-stage"></div>
       <button id="tdraw">洗 牌 抽 牌</button>
@@ -585,47 +608,75 @@ async function deepRead(key,chart,persp){
   });
 })();
 
-/* 塔罗 · 大阿卡那 22 张（释义温柔，即便死神/塔/恶魔也作建设性解） */
-const TAROT=[
-  {num:0,zh:'愚者',en:'THE FOOL',kw:'出发',up:'别怕未知，带一颗轻盈的心出发，最好的旅程常始于一步。'},
-  {num:1,zh:'魔术师',en:'THE MAGICIAN',kw:'我能',up:'把想法变成现实的材料你都有了，是时候动手。'},
-  {num:2,zh:'女祭司',en:'THE HIGH PRIESTESS',kw:'聆听',up:'答案在你心里，今天宜安静下来，听一听内在的声音。'},
-  {num:3,zh:'皇后',en:'THE EMPRESS',kw:'孕育',up:'好好爱自己、也被爱滋养，丰盛正向你靠近。'},
-  {num:4,zh:'皇帝',en:'THE EMPEROR',kw:'立柱',up:'为生活立一根稳的柱子，结构与边界会给你安全感。'},
-  {num:5,zh:'教皇',en:'THE HIEROPHANT',kw:'求教',up:'不妨向有经验的人请教，或回到经得起时间的方法里。'},
-  {num:6,zh:'恋人',en:'THE LOVERS',kw:'心之所向',up:'跟随内心做选择，真正的契合会让你更像自己。'},
-  {num:7,zh:'战车',en:'THE CHARIOT',kw:'驾驭',up:'握紧方向，靠意志冲过这一程，胜利属于不松手的人。'},
-  {num:8,zh:'力量',en:'STRENGTH',kw:'以柔克刚',up:'真正的强大是温柔而坚定，用爱去化解，而非硬碰。'},
-  {num:9,zh:'隐者',en:'THE HERMIT',kw:'点灯独行',up:'给自己一段独处，向内看，会找到那盏灯。'},
-  {num:10,zh:'命运之轮',en:'WHEEL OF FORTUNE',kw:'轮转',up:'运势正在转动，顺势而为，低谷会过去、好的会来。'},
-  {num:11,zh:'正义',en:'JUSTICE',kw:'权衡',up:'今天宜诚实与公正，种下的因，会结出对应的果。'},
-  {num:12,zh:'倒吊人',en:'THE HANGED MAN',kw:'慢下来',up:'暂停不是停滞，换个角度看，反而会豁然开朗。'},
-  {num:13,zh:'死神',en:'DEATH',kw:'破而后立',up:'一段旧的告一段落，是为新的腾位置，别怕，这是重生。'},
-  {num:14,zh:'节制',en:'TEMPERANCE',kw:'刚刚好',up:'凡事讲一个度，调和与耐心会带来长久的平稳。'},
-  {num:15,zh:'恶魔',en:'THE DEVIL',kw:'解绑',up:'看清是什么在捆住你（习惯、执念），看清，就有了松绑的可能。'},
-  {num:16,zh:'塔',en:'THE TOWER',kw:'破立',up:'有些旧结构需要被打破，看似动荡，实为更稳的重建清场。'},
-  {num:17,zh:'星星',en:'THE STAR',kw:'微光',up:'抬头，那颗星一直都在，希望与疗愈正在悄悄发生。'},
-  {num:18,zh:'月亮',en:'THE MOON',kw:'待明',up:'暂时看不清没关系，月色之下宜耐心，天会亮。'},
-  {num:19,zh:'太阳',en:'THE SUN',kw:'暖阳',up:'最明亮的一张牌，喜悦、温暖与成功正照在你身上。'},
-  {num:20,zh:'审判',en:'JUDGEMENT',kw:'回应',up:'一个内在的召唤在响，回应它，你正迎来觉醒与新生。'},
-  {num:21,zh:'世界',en:'THE WORLD',kw:'圆满',up:'一个阶段圆满抵达，值得庆祝；然后新的旅程又将开启。'}
+/* 塔罗 · 韦特体系 78 张全牌库（含正逆位；释义温柔安全，凶牌作建设性解） */
+const MAJOR=[
+  {n:0,zh:'愚者',en:'THE FOOL',kw:'出发',up:'别怕未知，带一颗轻盈的心出发，最好的旅程常始于一步。',dn:'出发前再想想，鲁莽与犹豫都先放一放，准备好了再走。'},
+  {n:1,zh:'魔术师',en:'THE MAGICIAN',kw:'我能',up:'把想法变成现实的材料你都有了，是时候动手。',dn:'能力还在，只是先聚焦，别让精力分散了。'},
+  {n:2,zh:'女祭司',en:'THE HIGH PRIESTESS',kw:'聆听',up:'答案在你心里，今天宜安静下来，听一听内在的声音。',dn:'别忽略直觉的提醒，也别想太多，信自己一点。'},
+  {n:3,zh:'皇后',en:'THE EMPRESS',kw:'孕育',up:'好好爱自己、也被爱滋养，丰盛正向你靠近。',dn:'先把爱分一点给自己，照顾好自己才有余力。'},
+  {n:4,zh:'皇帝',en:'THE EMPEROR',kw:'立柱',up:'为生活立一根稳的柱子，结构与边界会给你安全感。',dn:'规矩之外留点弹性，控制太多反而会累。'},
+  {n:5,zh:'教皇',en:'THE HIEROPHANT',kw:'求教',up:'不妨向有经验的人请教，或回到经得起时间的方法里。',dn:'传统供参考，走出自己的一条路也未尝不可。'},
+  {n:6,zh:'恋人',en:'THE LOVERS',kw:'心之所向',up:'跟随内心做选择，真正的契合会让你更像自己。',dn:'做选择前先听清内心，别被外界的声音带偏。'},
+  {n:7,zh:'战车',en:'THE CHARIOT',kw:'驾驭',up:'握紧方向，靠意志冲过这一程，胜利属于不松手的人。',dn:'方向先定准，硬冲不如先稳一稳。'},
+  {n:8,zh:'力量',en:'STRENGTH',kw:'以柔克刚',up:'真正的强大是温柔而坚定，用爱去化解，而非硬碰。',dn:'对自己温柔些，软弱的时刻也值得被接纳。'},
+  {n:9,zh:'隐者',en:'THE HERMIT',kw:'点灯独行',up:'给自己一段独处，向内看，会找到那盏灯。',dn:'独处够了，可以回到人群，别把自己关太久。'},
+  {n:10,zh:'命运之轮',en:'WHEEL OF FORTUNE',kw:'轮转',up:'运势正在转动，顺势而为，低谷会过去、好的会来。',dn:'低谷是暂时的，转机正在酝酿，再耐心一点。'},
+  {n:11,zh:'正义',en:'JUSTICE',kw:'权衡',up:'今天宜诚实与公正，种下的因，会结出对应的果。',dn:'对自己宽容一点，过去的就让它过去。'},
+  {n:12,zh:'倒吊人',en:'THE HANGED MAN',kw:'慢下来',up:'暂停不是停滞，换个角度看，反而会豁然开朗。',dn:'别困在原地太久，换个角度就能重新动起来。'},
+  {n:13,zh:'死神',en:'DEATH',kw:'破而后立',up:'一段旧的告一段落，是为新的腾位置，别怕，这是重生。',dn:'放手需要时间，慢慢来，旧的终会温柔地过去。'},
+  {n:14,zh:'节制',en:'TEMPERANCE',kw:'刚刚好',up:'凡事讲一个度，调和与耐心会带来长久的平稳。',dn:'找回平衡，别走极端，慢慢调回中道就好。'},
+  {n:15,zh:'恶魔',en:'THE DEVIL',kw:'解绑',up:'看清是什么在捆住你（习惯、执念），看清，就有了松绑的可能。',dn:'你正看清束缚、准备松绑，自由就在前面。'},
+  {n:16,zh:'塔',en:'THE TOWER',kw:'破立',up:'有些旧结构需要被打破，看似动荡，实为更稳的重建清场。',dn:'动荡正在平息，废墟之上能盖起更稳的房子。'},
+  {n:17,zh:'星星',en:'THE STAR',kw:'微光',up:'抬头，那颗星一直都在，希望与疗愈正在悄悄发生。',dn:'别灰心，希望仍在，把信心一点点找回来。'},
+  {n:18,zh:'月亮',en:'THE MOON',kw:'待明',up:'暂时看不清没关系，月色之下宜耐心，天会亮。',dn:'迷雾在散，真相渐明，不必再自己吓自己。'},
+  {n:19,zh:'太阳',en:'THE SUN',kw:'暖阳',up:'最明亮的一张牌，喜悦、温暖与成功正照在你身上。',dn:'乌云只是暂时遮光，暖阳一直都在那里。'},
+  {n:20,zh:'审判',en:'JUDGEMENT',kw:'回应',up:'一个内在的召唤在响，回应它，你正迎来觉醒与新生。',dn:'别对自己太苛刻，给自己一次重新开始的机会。'},
+  {n:21,zh:'世界',en:'THE WORLD',kw:'圆满',up:'一个阶段圆满抵达，值得庆祝；然后新的旅程又将开启。',dn:'就快圆满，再坚持最后一段，终点已在望。'}
 ];
-const TPOS=['现状','阻碍','指引'];
+const SUITS=[{key:'wand',zh:'权杖',en:'WANDS',cls:'m-fire'},{key:'cup',zh:'圣杯',en:'CUPS',cls:'m-water'},{key:'sword',zh:'宝剑',en:'SWORDS',cls:'m-metal'},{key:'coin',zh:'钱币',en:'PENTACLES',cls:'m-earth'}];
+const RK=['一','二','三','四','五','六','七','八','九','十','侍从','骑士','王后','国王'];
+const RKE=['ACE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','PAGE','KNIGHT','QUEEN','KING'];
+const MIN={
+  wand:[['火种','一股新的热情与冲劲正点燃，想做就去做。','热情先攒着，时机未到别急着点火。'],['远眺','站在已有的成绩上规划下一步，世界正等你去探。','计划可以再想清楚，别让犹豫困住脚步。'],['启航','布局已成，扬帆等风来，机会在远方招手。','进展稍慢没关系，耐心等船靠岸。'],['安庆','一段努力到了可庆祝的节点，与所爱之人同乐。','稳定就在眼前，先把根基再扎牢一点。'],['切磋','小小的竞争与碰撞，是让你更强的练习。','别为小事内耗，退一步海阔天空。'],['凯旋','努力被看见，带着这份肯定昂首前行。','认可会来的，先不被一时得失牵动。'],['坚守','守住你的立场，你比想象中更有底气。','有些仗不必硬扛，分清值不值得。'],['疾行','事情飞快推进，顺势而上别迟疑。','节奏太快时，给自己留个喘息。'],['韧','已近终点，再撑一下，你的坚持很了不起。','累了就歇歇，不必独自硬撑。'],['担子','扛了很多，这是你能扛的证明，也学着放下。','适时卸下一些，分担不是软弱。'],['跃跃欲试','带着好奇与热忱去尝试，新点子值得一试。','热情可以再聚焦，别三分钟热度。'],['勇往','充满行动力的一程，大胆去追你想要的。','冲劲很好，方向再定准一点更稳。'],['热望','自信温暖、有感染力，你的光会照亮旁人。','对自己温柔些，不必时时都在发光。'],['远见','以魄力与远见领航，你能带动一整局。','权衡之中多听他人，火候自然得当。']],
+  cup:[['心泉','一份新的情感在涌动，敞开心去接纳爱与温柔。','先把自己的心填满，爱自己也是一种圆满。'],['相知','两颗心彼此靠近，真诚的连结正在发生。','关系需要双向，慢慢来，不必勉强。'],['同欢','与朋友相聚的喜悦，值得珍惜的情谊。','热闹之余，也留一点空间给自己。'],['静观','暂时的倦怠是提醒你，看看身边被忽略的美好。','心门正在重新打开，新的机会要来了。'],['释怀','别只盯着失去，回头看，还有未倒的杯。','疗愈在发生，你正慢慢走出来。'],['暖忆','温柔的回忆带来抚慰，纯真的善意正回到你身边。','怀念过去之余，也别忘了向前看看。'],['心象','选择很多，听清自己真正想要的那一个。','迷雾散去，方向渐渐清晰起来。'],['转身','为了更值得的，温柔地告别旧的，是成长。','去留之间，给自己一点时间想清楚。'],['如愿','心愿被满足的暖意，允许自己享受这份美好。','真正的满足在心里，无关他人眼光。'],['圆满','情感的圆满与归属，被爱包围的幸福时刻。','小波澜不碍大局，沟通能让爱更稳。'],['心动','一份天真的情意或灵感，跟着感觉去体会。','情绪先安顿好，再表达会更从容。'],['追心','带着浪漫与理想去追寻，温柔也是力量。','理想很美，落地时也照顾一下现实。'],['共情','温柔包容、善解人意，你的体贴滋养着身边人。','照顾别人时，也别忘了自己的杯。'],['涵容','情绪稳而温厚，你能成为他人的依靠。','情绪也需要出口，允许自己偶尔脆弱。']],
+  sword:[['破晓','思路豁然清明，一个真相或决断带来突破。','头绪还乱时，先别急着下定论。'],['权衡','面对两难，静心权衡，答案会浮现。','别再回避，正视它反而轻松。'],['释痛','有些痛说明你认真爱过，允许它，然后疗愈开始。','乌云正在散去，心在慢慢复原。'],['休养','该让头脑歇一歇了，安静的修复很有必要。','休息够了，可以慢慢重新出发。'],['放下争','有些胜负不必争，守住内心的平和更要紧。','放下执念，和解从你开始。'],['渡','正驶向更平静的水域，离开风浪是明智。','过渡需要时间，每一步都算数。'],['取舍','用智慧而非蛮力，挑对策略事半功倍。','坦诚相待，绕弯路不如走直路。'],['松绑','困住你的多是念头，换个想法，路就开了。','你正一点点解开束缚，自由在前。'],['释忧','夜里的担忧常被放大，天亮就没那么可怕了。','焦虑在消退，把心事说出来会更轻。'],['终与始','最低处也是反弹的起点，最坏已过，黎明将至。','正在复原，给自己时间慢慢好起来。'],['求知','好奇又机敏，去探究、去提问，真相值得追。','话语有力量，出口前先想一想。'],['直进','果敢直率地推进，认准了就别拖。','急行之中，留心是否太冲。'],['清明','理性独立、洞察敏锐，你看得很透。','理智之外，也给情感留一席之地。'],['公允','以清晰与公正决断，你的判断让人信服。','坚持原则时，也容一点温度。']],
+  coin:[['落实','一个踏实的好机会落地，物质与健康的新起点。','机会需要耕耘，先把基础打好。'],['平衡','灵活调度，你能在多件事之间找到节奏。','别让自己太满，分清轻重缓急。'],['协作','用心打磨的技艺被认可，合作让成果更好。','细节再校一遍，配合会更默契。'],['守成','稳稳守住已有的，安全感来自踏实积累。','抓得太紧会累，适度松手更自在。'],['互暖','难处是暂时的，别忘了求助，温暖就在不远处。','转机在来，你正走出困境。'],['施受','给予与接受达成平衡，善意在流动。','付出与回报，找到公平的那个点。'],['静待','耕耘已久，耐心等果实成熟，回报在路上。','评估一下投入，必要时调整方向。'],['精进','专注打磨手艺，日积月累必有所成。','别只是埋头，偶尔抬头看看意义。'],['自足','靠自己赢得的丰盛与从容，好好享受。','独立很好，也允许自己被照顾。'],['厚泽','稳固长久的丰盛与传承，根基深厚的安稳。','守护已有的同时，别忘了人比物更重。'],['务实','脚踏实地去学一项新本领，机会就在手边。','计划要落地，少空想多行动。'],['笃行','稳健可靠地推进，慢即是快。','稳之外加一点灵活，别太死板。'],['丰养','务实又温暖，把生活与他人都照料得妥帖。','照顾一切时，也留点资源给自己。'],['殷实','稳健富足、值得信赖，你已建起可靠的根基。','富足之上，别让物质遮住了心。']]
+};
+const TAROT=MAJOR.map(c=>({tag:roman(c.n),zh:c.zh,en:c.en,kw:c.kw,up:c.up,dn:c.dn,cls:'m-major'}));
+SUITS.forEach(s=>MIN[s.key].forEach((m,i)=>TAROT.push({tag:s.zh,zh:s.zh+RK[i],en:RKE[i]+' OF '+s.en,kw:m[0],up:m[1],dn:m[2],cls:s.cls})));
+const SPREADS={daily:{n:1,pos:['今日指引'],lock:true,sub:'每日一次 · 当日结果不变'},three:{n:3,pos:['现状','阻碍','指引'],sub:'心中默想一个问题，再洗牌'},celtic:{n:10,pos:['现状','挑战','根基','过去','可能','近未来','心境','环境','希望与担忧','结果'],sub:'十牌全景 · 默想问题后洗牌'}};
 function roman(n){ if(n===0)return '0'; const t=[[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let s='',x=n; for(const p of t){ while(x>=p[0]){s+=p[1];x-=p[0];} } return s; }
-let tdrawn=[];
-function buildTarot(){ const idx=[...Array(22).keys()]; for(let i=21;i>0;i--){const j=(Math.random()*(i+1))|0;[idx[i],idx[j]]=[idx[j],idx[i]];} tdrawn=idx.slice(0,3);
-  const stage=$('tarot-stage'); stage.innerHTML=''; $('tarot-read').innerHTML=''; $('tarot-read').classList.remove('show'); $('thint').style.display='block';
-  tdrawn.forEach((ci,pos)=>{ const c=TAROT[ci]; const el=document.createElement('div'); el.className='tcard'; el.dataset.pos=pos;
-    el.innerHTML=`<div class="tflip"><div class="tinner"><div class="tface tback"><span class="tb-glyph">☯</span></div><div class="tface tfront"><div class="tnum">${roman(c.num)}</div><div class="tzh">${c.zh}</div><div class="ten">${c.en}</div><div class="tkw">${c.kw}</div></div></div></div><div class="tpos">${TPOS[pos]}</div>`;
-    el.querySelector('.tflip').addEventListener('click',()=>flipTarot(el)); stage.appendChild(el); }); }
+let tmode='daily', tcards=[];
+function tDrawSet(){ const sp=SPREADS[tmode];
+  if(sp.lock){ let nm=''; try{nm=localStorage.getItem(NKEY)||'';}catch(e){} const r=mulberry32(hash('tarot|'+todayKey()+'|'+nm)); tcards=[{idx:Math.floor(r()*78),rev:r()<0.45}]; }
+  else { const a=[...Array(78).keys()]; for(let i=77;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];} tcards=a.slice(0,sp.n).map(idx=>({idx,rev:Math.random()<0.45})); } }
+function tCardHTML(o,pos){ const c=TAROT[o.idx], sp=SPREADS[tmode];
+  return `<div class="tcard${o.rev?' rev':''}" data-pos="${pos}"><div class="tflip"><div class="tinner"><div class="tface tback"><span class="tb-glyph">☯</span></div><div class="tface tfront"><div class="tnum ${c.cls}">${c.tag}</div><div class="tzh">${c.zh}</div><div class="ten">${c.en}</div><div class="tkw">${c.kw}</div></div></div></div><div class="tpos">${sp.pos[pos]}</div></div>`; }
+function renderTarot(){ const sp=SPREADS[tmode], stage=$('tarot-stage');
+  stage.className='tstage-'+tmode; $('tarot-read').innerHTML=''; $('tarot-read').classList.remove('show');
+  if(tmode==='celtic'){
+    const cross=tcards.slice(0,6).map((o,i)=>`<div class="cc cc${i+1}">${tCardHTML(o,i)}</div>`).join('');
+    const staff=tcards.slice(6).map((o,i)=>tCardHTML(o,i+6)).join('');
+    stage.innerHTML=`<div class="celtic-cross">${cross}</div><div class="celtic-staff">${staff}</div>`;
+  } else stage.innerHTML=tcards.map((o,i)=>tCardHTML(o,i)).join('');
+  stage.querySelectorAll('.tcard').forEach(el=>el.querySelector('.tflip').addEventListener('click',()=>flipTarot(el)));
+  $('thint').style.display='block'; $('thint').textContent=sp.lock?'✦ 今日塔罗 · 轻触翻开 ✦':'✦ 轻触牌面 · 逐张翻开 ✦'; }
 function flipTarot(el){ if(el.classList.contains('flipped'))return; el.classList.add('flipped');
-  const pos=+el.dataset.pos, c=TAROT[tdrawn[pos]];
-  const line=document.createElement('div'); line.className='tline'; line.innerHTML=`<b>${TPOS[pos]} · ${c.zh}</b>（${c.kw}）—— ${c.up}`;
+  const pos=+el.dataset.pos, o=tcards[pos], c=TAROT[o.idx], sp=SPREADS[tmode];
+  const line=document.createElement('div'); line.className='tline';
+  line.innerHTML=`<b>${sp.pos[pos]} · ${c.zh}${o.rev?'（逆位）':''}</b>（${c.kw}）—— ${o.rev?c.dn:c.up}`;
   $('tarot-read').appendChild(line); $('tarot-read').classList.add('show');
-  if($('tarot-stage').querySelectorAll('.flipped').length>=3){ const c0=TAROT[tdrawn[0]],c1=TAROT[tdrawn[1]],c2=TAROT[tdrawn[2]];
-    const syn=document.createElement('div'); syn.className='tsyn'; syn.innerHTML=`牌阵在说：现状是<b>「${c0.kw}」</b>，挡路的是<b>「${c1.kw}」</b>，它给你的指引是 ——<b>「${c2.kw}」</b>。<br>愿这三张牌，给你一点点光。`;
-    $('tarot-read').appendChild(syn); $('thint').style.display='none'; } }
-$('tdraw').addEventListener('click',buildTarot);
+  if($('tarot-stage').querySelectorAll('.tcard.flipped').length>=sp.n) tSynth(); }
+function tSynth(){ const g=tcards.map(o=>TAROT[o.idx]), syn=document.createElement('div'); syn.className='tsyn';
+  if(tmode==='daily'){ const o=tcards[0],c=g[0]; syn.innerHTML=`今日的关键词是 <b>「${c.kw}」</b>。${o.rev?c.dn:c.up}<br>愿你带着这份提醒，温柔地过好今天。`; }
+  else if(tmode==='three') syn.innerHTML=`牌阵在说：现状是 <b>「${g[0].kw}」</b>，挡路的是 <b>「${g[1].kw}」</b>，给你的指引是 <b>「${g[2].kw}」</b>。<br>愿这三张牌，给你一点点光。`;
+  else syn.innerHTML=`整体来看：现状围绕 <b>「${g[0].kw}」</b>，最大的功课是 <b>「${g[1].kw}」</b>，而最终走向 <b>「${g[9].kw}」</b>。<br>十张牌不是定数，而是一面镜子 —— 看见了，你就握住了选择权。`;
+  $('tarot-read').appendChild(syn); $('thint').style.display='none'; }
+function setTMode(m){ tmode=m; document.querySelectorAll('#tmodes button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  $('tsub2').textContent=SPREADS[m].sub; $('tdraw').textContent=SPREADS[m].lock?'查 看 今 日 塔 罗':'洗 牌 抽 牌'; tDrawSet(); renderTarot(); }
+document.querySelectorAll('#tmodes button').forEach(b=>b.addEventListener('click',()=>setTMode(b.dataset.m)));
+$('tdraw').addEventListener('click',()=>{ tDrawSet(); renderTarot(); });
+setTMode('daily');
 
 document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b)); document.body.dataset.board=b.dataset.b; }));
