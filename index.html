@@ -8,10 +8,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Noto+Serif+SC:wght@300;500;700;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap');
 *{ margin:0; padding:0; box-sizing:border-box; }
 :root{ color-scheme:dark; --gold:#e3c074; --gold-soft:#b89752; --jade:#a8c8a0; --ink:#1a1208; --seal:#b5302b; --paper:#ece0c4;
-  --wood:#9ccf86; --fire:#e8736b; --earth:#e3c074; --metal:#d8d2c2; --water:#8ab6d8; }
+  --wood:#9ccf86; --fire:#e8736b; --earth:#e3c074; --metal:#d8d2c2; --water:#8ab6d8;
+  /* 东方烟金玻璃 */
+  --glass:linear-gradient(158deg, rgba(44,33,18,.40), rgba(15,11,7,.54)); --glass-blur:blur(16px) saturate(1.18);
+  --glass-bd:rgba(227,192,116,.26); --glass-sh:0 26px 72px rgba(0,0,0,.55), 0 0 0 1px rgba(181,48,43,.07), inset 0 1px 0 rgba(255,236,190,.08); }
 html,body{ width:100%; height:100%; }
 body{ font-family:'Noto Serif SC',serif; color:#e9e2cf; min-height:100%;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.4'/></svg>"), radial-gradient(130% 90% at 50% 6%, #24190f 0%, #150d06 52%, #0a0603 100%); overflow-x:hidden; }
+#neb{ position:fixed; inset:0; z-index:0; }
 #bg{ position:fixed; inset:0; z-index:0; }
 #app{ position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:18px 18px 70px; }
 
@@ -23,7 +27,7 @@ body{ font-family:'Noto Serif SC',serif; color:#e9e2cf; min-height:100%;
 #nav button.on{ color:var(--paper); background:linear-gradient(180deg,#c5352f,#9c241f); border-color:transparent; box-shadow:0 0 14px rgba(181,48,43,.4); }
 
 .board{ display:none; flex:1; width:100%; flex-direction:column; align-items:center; justify-content:center; }
-body[data-board="sign"] #b-sign, body[data-board="huangli"] #b-huangli, body[data-board="tarot"] #b-tarot, body[data-board="bazi"] #b-bazi, body[data-board="yuan"] #b-yuan, body[data-board="src"] #b-src{ display:flex; }
+body[data-board="sign"] #b-sign, body[data-board="huangli"] #b-huangli, body[data-board="tarot"] #b-tarot, body[data-board="gua"] #b-gua, body[data-board="bazi"] #b-bazi, body[data-board="yuan"] #b-yuan, body[data-board="src"] #b-src{ display:flex; }
 /* 国风：面板金色双框 */
 .panel{ position:relative; }
 .panel::before{ content:''; position:absolute; inset:6px; border:1px solid rgba(227,192,116,.18); border-radius:9px; pointer-events:none; }
@@ -36,9 +40,10 @@ body[data-board="sign"] #b-sign, body[data-board="huangli"] #b-huangli, body[dat
 #tarot-stage{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:20px 0 6px; min-height:190px; }
 #thint{ display:none; font-size:11px; letter-spacing:.2em; color:var(--jade); text-align:center; opacity:.85; margin-bottom:8px; }
 .tcard{ display:flex; flex-direction:column; align-items:center; }
-.tflip{ position:relative; width:100px; height:158px; perspective:900px; cursor:pointer; }
-.tinner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .75s cubic-bezier(.4,0,.2,1); }
+.tflip{ position:relative; width:100px; height:158px; perspective:900px; cursor:pointer; border-radius:9px; transition:transform .14s ease-out; will-change:transform; }
+.tinner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .72s cubic-bezier(.34,1.56,.64,1); }
 .tcard.flipped .tinner{ transform:rotateY(180deg); }
+.glare{ position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; mix-blend-mode:screen; transition:opacity .3s ease; z-index:6; }
 .tface{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
 .tback{ background:linear-gradient(160deg,#4a1622,#1c0a12); border:2px solid var(--gold); box-shadow:inset 0 0 0 4px rgba(232,200,115,.14); }
 .tback::after{ content:''; position:absolute; inset:8px; border:1px solid rgba(232,200,115,.3); border-radius:5px; }
@@ -122,7 +127,8 @@ body.divining #glyph{ animation:pulse 1.2s ease-in-out infinite; } @keyframes pu
 #draw{ margin-top:22px; font-family:'Noto Serif SC',serif; font-weight:500; font-size:16px; letter-spacing:.28em; text-indent:.28em; color:var(--ink); background:linear-gradient(180deg,#f0d68a,#d8b45e); border:none; border-radius:999px; padding:13px 34px; cursor:pointer; box-shadow:0 0 26px rgba(232,200,115,.35); transition:transform .15s ease, box-shadow .3s ease; }
 #draw:hover{ transform:translateY(-1px); } #diviningTip{ height:16px; margin-top:12px; font-size:13px; letter-spacing:.3em; color:var(--jade); opacity:0; transition:opacity .4s ease; } body.divining #diviningTip{ opacity:.85; }
 
-#card{ display:none; width:min(420px,92vw); padding:28px 26px 22px; position:relative; background:linear-gradient(180deg, rgba(28,26,46,.78), rgba(16,15,30,.82)); border:1px solid rgba(232,200,115,.4); border-radius:16px; box-shadow:0 0 50px rgba(20,16,40,.7), inset 0 0 30px rgba(232,200,115,.05); opacity:0; transform:scale(.96); transition:opacity .9s ease, transform .9s ease; }
+#card{ display:none; width:min(420px,92vw); padding:28px 26px 22px; position:relative; background:linear-gradient(160deg, rgba(30,26,42,.5), rgba(13,11,22,.62)); -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur); border:1px solid rgba(232,200,115,.36); border-radius:18px; box-shadow:var(--glass-sh), 0 0 50px rgba(20,16,40,.5); opacity:0; transform:scale(.96); transition:opacity .9s ease, transform .9s ease; transform-style:preserve-3d; }
+.glare{ position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity .35s ease; pointer-events:none; mix-blend-mode:screen; z-index:3; }
 body[data-state="sealed"] #portal{ display:none; } body[data-state="sealed"] #card{ display:block; }
 body[data-state="sealed"] #emblem{ width:88px; height:88px; } body[data-state="sealed"] #glyph{ font-size:30px; }
 #card.show{ opacity:1; transform:scale(1); }
@@ -141,7 +147,7 @@ body[data-state="sealed"] #emblem{ width:88px; height:88px; } body[data-state="s
 #share:hover{ background:rgba(232,200,115,.08); }
 
 #b-bazi{ max-width:520px; }
-.panel{ width:100%; background:linear-gradient(180deg, rgba(42,31,18,.72), rgba(22,16,9,.82)); border:1px solid rgba(227,192,116,.28); border-radius:14px; padding:24px; }
+.panel{ width:100%; background:var(--glass); -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur); border:1px solid var(--glass-bd); border-radius:16px; padding:24px; box-shadow:var(--glass-sh); }
 .phead{ font-family:'ZCOOL XiaoWei',serif; font-weight:400; font-size:24px; letter-spacing:.22em; text-indent:.22em; color:var(--gold); text-align:center; text-shadow:0 0 16px rgba(227,192,116,.25); }
 .psub{ font-size:11px; letter-spacing:.14em; color:#9a937c; text-align:center; margin-top:6px; margin-bottom:18px; }
 .frow{ display:flex; align-items:center; gap:10px; margin-bottom:13px; flex-wrap:wrap; }
@@ -164,13 +170,67 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
 .dayun{ margin-top:12px; }
 .dayun-head{ font-size:13px; color:#cfc6aa; text-align:center; margin-bottom:10px; } .dayun-head b{ color:var(--gold); }
 .dayun-gz{ display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; }
-.du{ flex:0 0 auto; min-width:54px; text-align:center; border:1px solid rgba(227,192,116,.2); border-radius:8px; padding:9px 4px; }
-.du-age{ font-size:10px; color:#9a937c; } .du-gz{ font-size:18px; font-weight:700; color:#eee4cc; margin-top:4px; }
+.du{ flex:0 0 auto; min-width:56px; text-align:center; border:1px solid rgba(227,192,116,.28); border-radius:12px; padding:10px 5px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12)); }
+.du-age{ font-size:10px; color:#9a937c; } .du-gz{ font-size:18px; font-weight:700; color:#f0e6cc; margin-top:4px; text-shadow:0 0 10px rgba(232,200,115,.3); }
 .pillars{ display:flex; gap:8px; }
-.pillar{ flex:1; text-align:center; border:1px solid rgba(232,200,115,.2); border-radius:10px; padding:12px 4px; }
-.pillar .pk{ font-size:11px; letter-spacing:.18em; color:#9a937c; } .pillar .pg,.pillar .pz{ font-size:26px; font-weight:700; margin-top:6px; } .pillar .pwx{ font-size:10px; margin-top:5px; opacity:.8; }
+.pillar{ flex:1; text-align:center; border:1px solid rgba(232,200,115,.3); border-radius:14px; padding:14px 4px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.14)); box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 6px 18px rgba(0,0,0,.28); }
+.pillar .pk{ font-size:11px; letter-spacing:.18em; color:var(--gold-soft); } .pillar .pg,.pillar .pz{ font-size:28px; font-weight:700; margin-top:6px; text-shadow:0 0 16px currentColor; } .pillar .pwx{ font-size:10px; margin-top:6px; opacity:.85; }
 .brow{ font-size:14px; line-height:2; color:#d6cfb8; margin-top:16px; text-align:center; } .brow b{ color:var(--gold); }
-.wx-bar{ display:flex; gap:5px; margin-top:12px; } .wx-seg{ flex:1; text-align:center; font-size:12px; padding:6px 0; border-radius:6px; }
+.wx-bar{ display:flex; flex-direction:column; gap:9px; margin-top:14px; }
+.wx-row{ display:flex; align-items:center; gap:11px; }
+.wx-el{ width:20px; font-size:15px; font-weight:700; text-align:center; text-shadow:0 0 10px currentColor; }
+.wx-track{ flex:1; height:10px; border-radius:10px; background:rgba(255,255,255,.06); overflow:hidden; box-shadow:inset 0 0 7px rgba(0,0,0,.35); }
+.wx-track i{ display:block; height:100%; border-radius:10px; background:currentColor; box-shadow:0 0 12px currentColor; transition:width .9s cubic-bezier(.2,1,.3,1); }
+.wx-n{ width:18px; font-size:14px; font-weight:700; text-align:center; }
+.wx-row.dim{ opacity:.42; }
+.ss-h{ font-size:13px; letter-spacing:.3em; text-indent:.3em; color:var(--gold-soft); text-align:center; margin:20px 0 10px; }
+.ss-list{ display:flex; flex-wrap:wrap; gap:9px; justify-content:center; }
+.ss-badge{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:9px 15px; border-radius:12px; border:1px solid rgba(232,200,115,.4); background:linear-gradient(180deg, rgba(232,200,115,.12), rgba(232,200,115,.03)); box-shadow:0 0 16px rgba(232,200,115,.12), inset 0 1px 0 rgba(255,255,255,.12); }
+.ss-badge b{ font-size:15px; font-weight:700; color:var(--gold); text-shadow:0 0 12px rgba(232,200,115,.45); letter-spacing:.05em; }
+.ss-badge i{ font-style:normal; font-size:10px; color:#bcae8e; }
+.ss-none{ font-size:13px; color:#9a937c; }
+.ln-card{ display:flex; align-items:center; gap:14px; padding:13px 16px; border-radius:14px; border:1px solid rgba(232,200,115,.28); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.14)); }
+.ln-gz{ font-size:26px; font-weight:700; color:var(--gold); text-shadow:0 0 16px rgba(232,200,115,.4); letter-spacing:.06em; }
+.ln-mid{ display:flex; flex-direction:column; gap:3px; text-align:left; }
+.ln-ss{ font-size:14px; font-weight:700; color:#f0e6cc; }
+.ln-tip{ font-size:12.5px; line-height:1.6; color:#cfc6aa; }
+.tst-row{ font-size:12px; color:#9a937c; cursor:pointer; letter-spacing:.04em; margin:-4px 0 10px; transition:color .2s ease; }
+.tst-row:hover{ color:var(--gold-soft); }
+.tst-note{ font-size:11px; line-height:1.7; color:#8c8870; margin:2px 0 12px; }
+.tst-result{ font-size:12.5px; line-height:1.7; color:var(--jade); text-align:center; margin-top:10px; padding:8px 12px; border:1px solid rgba(168,200,160,.3); border-radius:10px; background:rgba(168,200,160,.06); }
+/* 卜卦 · 周易 */
+#b-gua{ max-width:480px; }
+#guaModes{ display:flex; gap:7px; justify-content:center; margin:8px 0 4px; }
+#guaModes button{ background:rgba(255,255,255,.04); border:1px solid rgba(232,200,115,.25); color:#cfc6aa; border-radius:999px; padding:6px 14px; cursor:pointer; font-family:'Noto Serif SC',serif; font-size:12px; letter-spacing:.08em; transition:all .2s ease; }
+#guaModes button.on{ background:linear-gradient(180deg,#c5352f,#9c241f); color:var(--paper); border-color:transparent; box-shadow:0 0 12px rgba(181,48,43,.35); }
+#guaNum{ display:flex; }
+.gua-tip{ font-size:11px; color:#9a937c; text-align:center; letter-spacing:.06em; margin-top:8px; min-height:14px; }
+.gua-pro-tog{ display:flex; align-items:center; gap:7px; justify-content:center; font-size:12px; color:#cfc6aa; margin-top:10px; cursor:pointer; }
+.gua-pro-tog input{ accent-color:var(--seal); }
+.gua-pro{ margin-top:18px; padding-top:14px; border-top:1px solid rgba(232,200,115,.2); }
+.gp-h{ font-family:'ZCOOL XiaoWei',serif; font-size:18px; letter-spacing:.2em; text-indent:.2em; color:var(--gold); text-align:center; }
+.gp-sub{ font-size:12px; color:#9a937c; text-align:center; margin:8px 0 12px; letter-spacing:.04em; }
+.gp-t{ width:100%; border-collapse:collapse; }
+.gp-t td{ padding:8px 6px; font-size:14px; text-align:center; border-bottom:1px solid rgba(232,200,115,.1); }
+.gp-pos{ color:#9a937c; font-size:12px; width:46px; }
+.gp-liu{ color:#e6d6a8; font-weight:500; width:46px; }
+.gp-t .gp-wx{ font-size:10px; opacity:.7; margin-left:2px; }
+.gp-mk{ width:44px; color:var(--seal); font-weight:700; }
+.gp-dong{ color:#e8a05a; margin-left:4px; }
+.gp-note{ font-size:11px; line-height:1.8; color:#8c8870; margin-top:12px; }
+#guaCast{ width:100%; margin-top:12px; font-family:'Noto Serif SC',serif; font-weight:500; font-size:16px; letter-spacing:.28em; text-indent:.28em; color:var(--ink); background:linear-gradient(180deg,#f0d68a,#d8b45e); border:none; border-radius:10px; padding:13px; cursor:pointer; box-shadow:0 6px 22px rgba(232,200,115,.2); transition:transform .15s ease; }
+#guaCast:hover{ transform:translateY(-1px); }
+.gua-sym{ display:flex; flex-direction:column; gap:9px; align-items:center; margin:24px 0 18px; }
+.gua-line{ display:flex; gap:8px; width:150px; height:14px; position:relative; opacity:0; transform:translateY(10px); transition:opacity .45s ease, transform .45s ease; }
+.gua-line.show{ opacity:1; transform:none; }
+.gua-line i{ flex:1; border-radius:3px; background:linear-gradient(180deg,#f0d68a,#c9a44e); box-shadow:0 0 10px rgba(232,200,115,.3); }
+.gua-line.yin i{ flex:0 0 calc(50% - 4px); }
+.gua-line.chg i{ background:linear-gradient(180deg,#f2b5a0,#c5332f); box-shadow:0 0 13px rgba(197,51,47,.5); }
+.gua-line.chg::after{ content:'○ 动'; position:absolute; right:-34px; top:-1px; font-size:11px; color:var(--seal); white-space:nowrap; }
+.gua-name{ font-family:'Ma Shan Zheng',cursive; font-size:36px; color:var(--gold); text-shadow:0 0 16px rgba(227,192,116,.4); text-align:center; }
+.gua-judg{ font-size:15px; letter-spacing:.24em; text-indent:.24em; color:var(--jade); text-align:center; margin-top:4px; }
+.gua-read{ font-size:14px; line-height:1.95; color:#d6cfb8; font-weight:300; text-align:left; margin-top:18px; }
+.gua-bian{ font-size:13px; line-height:1.9; color:#cfc6aa; margin-top:16px; padding-top:14px; border-top:1px solid rgba(232,200,115,.2); text-align:left; } .gua-bian b{ color:var(--gold); }
 .note{ font-size:11px; line-height:1.9; color:#8c8870; margin-top:16px; }
 .m-wood{color:var(--wood)} .m-fire{color:var(--fire)} .m-earth{color:var(--earth)} .m-metal{color:var(--metal)} .m-water{color:var(--water)}
 .bg-wood{background:rgba(127,227,160,.16)} .bg-fire{background:rgba(255,107,107,.16)} .bg-earth{background:rgba(232,200,115,.16)} .bg-metal{background:rgba(223,230,239,.16)} .bg-water{background:rgba(109,180,255,.16)}
@@ -183,15 +243,22 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
 #b-src .warn{ border:1px solid rgba(197,80,47,.4); background:rgba(197,80,47,.08); border-radius:8px; padding:12px 14px; margin-top:14px; color:#e8cdb0; }
 
 #sig{ position:fixed; bottom:14px; left:0; right:0; text-align:center; z-index:2; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:#7c7a96; opacity:.55; }
+#nebpick{ position:fixed; left:16px; bottom:14px; z-index:5; display:flex; gap:8px; }
+#nebpick b{ width:18px; height:18px; border-radius:50%; cursor:pointer; border:2px solid rgba(255,255,255,.16); box-shadow:0 0 0 1px rgba(0,0,0,.35); transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+#nebpick b:hover{ transform:scale(1.15); }
+#nebpick b.on{ border-color:var(--gold); transform:scale(1.22); box-shadow:0 0 12px rgba(227,192,116,.55); }
+@media (max-width:520px){ #nebpick{ gap:10px; } #nebpick b{ width:20px; height:20px; } }
 </style>
 </head>
 <body data-board="sign" data-state="home">
+<canvas id="neb"></canvas>
 <canvas id="bg"></canvas>
 <div id="app">
   <div id="nav">
     <button data-b="sign" class="on">今日一签</button>
     <button data-b="huangli">黄历</button>
     <button data-b="tarot">塔罗</button>
+    <button data-b="gua">卜卦</button>
     <button data-b="bazi">命盘 · 八字</button>
     <button data-b="yuan">正缘</button>
     <button data-b="src">算法来源</button>
@@ -247,6 +314,27 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
     </div>
   </div>
 
+  <div id="b-gua" class="board">
+    <div class="panel">
+      <div class="phead">卜 卦 · 周 易</div>
+      <div class="psub">心中默想一件事 · 一事一卦</div>
+      <div id="guaModes"><button data-g="coin" class="on">铜钱摇卦</button><button data-g="time">时辰起卦</button><button data-g="num">报数起卦</button></div>
+      <input id="guaQ" class="bazi-in" style="width:100%;margin-top:6px" maxlength="40" placeholder="想问的事（可留空，即问今日运势）" autocomplete="off">
+      <div id="guaNum" style="display:none;gap:8px;margin-top:8px"><input id="guaN1" class="bazi-in" type="number" style="flex:1" placeholder="报一个数"><input id="guaN2" class="bazi-in" type="number" style="flex:1" placeholder="再报一个数"></div>
+      <div class="gua-tip" id="guaTip"></div>
+      <label class="gua-pro-tog"><input type="checkbox" id="guaProChk"> 六爻装卦（高阶 · 世应六亲）</label>
+      <button id="guaCast">摇 卦</button>
+      <div id="guaOut" style="display:none">
+        <div class="gua-sym" id="guaSym"></div>
+        <div class="gua-name" id="guaName"></div>
+        <div class="gua-judg" id="guaJudg"></div>
+        <div class="gua-read" id="guaRead"></div>
+        <div class="gua-bian" id="guaBian"></div>
+        <div class="gua-pro" id="guaPro" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="b-bazi" class="board">
     <div class="panel">
       <div class="phead">命 盘 · 八 字 排 盘</div>
@@ -258,11 +346,20 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
         <select class="bazi-in" id="bd"></select><span style="color:#9a937c">日</span>
       </div>
       <div class="frow"><label>时辰</label><select class="bazi-in" id="bh" style="flex:1"></select></div>
+      <div class="tst-row" id="tstToggle">▸ 真太阳时校正（更严谨）</div>
+      <div id="tstPanel" style="display:none">
+        <div class="frow"><label>出生地</label><select class="bazi-in" id="bcity" style="flex:1"></select></div>
+        <div class="frow"><label>钟表时</label><input class="bazi-in" id="btime" type="time" style="flex:1"></div>
+        <div class="tst-note">填好出生地 + 出生证/钟表上的精确时间，将按「真太阳时」(经度差 + 均时差) 推算时辰，覆盖上面所选时辰。</div>
+      </div>
       <button id="calc">排 盘</button>
       <div id="bazi-out">
         <div class="pillars" id="pillars"></div>
+        <div class="tst-result" id="tstOut" style="display:none"></div>
         <div class="brow" id="brow"></div>
         <div class="wx-bar" id="wxbar"></div>
+        <div class="ss-wrap" id="shensha"></div>
+        <div class="liunian" id="liunian"></div>
         <div class="dayun">
           <div class="phead" style="font-size:18px;margin-top:14px">大 运</div>
           <div class="dayun-head" id="dayun-head"></div>
@@ -321,7 +418,16 @@ select.bazi-in{ flex:1; min-width:84px; cursor:pointer; -webkit-appearance:none;
       <p>已核验：2026 立春 本程序算得 02-04 03:55，权威值 04:01:51 —— 日期一致、时刻误差约 7 分钟。</p>
       <h3>六、大运（起运 / 顺逆）</h3>
       <p><b>顺逆</b>：阳年男、阴年女顺排；阴年男、阳年女逆排（由年干阴阳 + 性别决定）。<br><b>起运</b>：从出生数到下一个（顺）或上一个（逆）「节」的天数 ÷ 3 = 起运岁。<br><b>大运干支</b>：自月柱起，按顺/逆在六十甲子上每十年进一柱。</p>
-      <div class="warn">⚠ <b>精度说明</b>：节气用太阳黄经精确计算（误差约数分钟），<b>年柱 / 月柱 / 起运</b>因此已精确；仅当出生在节气交接的前后数分钟，才可能有一柱之差。日柱、时柱为精确计算。起运岁取整，不同流派进位略有差异。本程序为传统文化体验，非吉凶定论。</p>
+      <h3>七、真太阳时校正（可选）</h3>
+      <p>钟表时（北京时，标准经线 120°E）与真实太阳位置有偏差。校正公式：<br><code>真太阳时 = 钟表时 + (出生地经度 − 120) × 4 分钟 + 均时差</code><br><b>经度差</b>：每偏离 120°E 一度，相差 4 分钟。<b>均时差</b>用 <code>9.87·sin2B − 7.53·cosB − 1.5·sinB</code>（B 由年内日序求得，误差约 ±0.5 分钟）。校正后重新落入十二时辰，时柱才真正精确。未填出生地则不校正，沿用所选时辰。</p>
+      <h3>八、神煞（天乙贵人 / 文昌 / 驿马 / 华盖 / 咸池）</h3>
+      <p>以<b>日干</b>查天乙贵人、文昌；以<b>日支</b>三合局查驿马、华盖、咸池桃花。对应地支出现在四柱地支中即「命带」。属传统查表法，不同典籍略有出入，此处取常见版本。</p>
+      <h3>九、流年</h3>
+      <p>取当前公历年的年干支（以立春换年），与<b>日主</b>论十神关系，给出一句温和提示。仅作年度参考，非吉凶断言。</p>
+      <h3>十、卜卦（周易摇卦）</h3>
+      <p>仿三枚铜钱摇六次：每爻三枚铜钱，正面记 3、反面记 2，三枚之和为 6/7/8/9 —— <b>6 老阴、9 老阳</b>为「动爻」，7 少阳、8 少阴为静爻。自下而上叠成<b>本卦</b>；动爻阴阳互变得<b>变卦</b>，示事情走向。卦象对应六十四卦之一，给出卦名、卦辞与温和解读。<br><b>确定性</b>：以 <code>所问之事 + 日期</code> 为随机种子（同八字日柱一样的 hash 算法）—— 同一件事、同一天，卦象固定不变，不会反复刷新影响心情；换一件事才是新卦。一事一卦、心诚则灵。</p>
+      <p><b>三种起卦方式</b>：① 铜钱摇卦（上）；② <b>时辰起卦</b>（梅花易数）：上卦＝(年支数+月+日)%8、下卦＝(…+时辰数)%8、动爻＝(…)%6，先天八卦数 乾1兑2离3震4巽5坎6艮7坤8；③ <b>报数起卦</b>：两数分取上下卦、和取动爻。<br><b>体用生克</b>（梅花断法）：含动爻者为「用」、另一经卦为「体」，按两者五行生克断顺逆（用生体 / 体克用 / 比和为顺，体生用 / 用克体为逆）。<br><b>动爻爻位</b>：按易理给出位置含义（初为始、二在内、三多变、四近成、五多功、上为终），属正统象数,不臆造古文。<br><b>六爻装卦（高阶）</b>：勾选后按京房八宫法装卦 —— ① 纳甲地支：阳卦(乾震坎艮)顺、阴卦(坤巽离兑)逆，隔位纳支（乾内子寅辰·外午申戌，余类推）；② 世应：由八宫卦序（本宫世六、一至五世对应、游魂世四、归魂世三）推定，应爻＝世爻隔三位；③ 六亲：以本宫五行为「我」，生我父母、我生子孙、克我官鬼、我克妻财、同我兄弟。<b>此为程序化推算并已核对古籍</b>（如乾为天：初子孙·二妻财·三父母·四官鬼·五兄弟·上父母，与典籍一致）。<br><span style="color:#c9a06a">※ 用神取舍、月建日辰旺衰断因事而异，留待自参；完整 384 爻辞原文待核对权威版本后再补，绝不凭记忆杜撰。</span></p>
+      <div class="warn">⚠ <b>精度说明</b>：节气用太阳黄经精确计算（误差约数分钟），<b>年柱 / 月柱 / 起运</b>因此已精确；仅当出生在节气交接的前后数分钟，才可能有一柱之差。日柱、时柱为精确计算。起运岁取整，不同流派进位略有差异。真太阳时校正后若跨 23 点（子时），本程序<b>不改换日柱</b>（晚子时是否换日，流派有别）。本程序为传统文化体验，非吉凶定论。</p>
       <h3>参考</h3>
       <ul>
         <li>维基百科「干支」「干支历」</li>
@@ -380,6 +486,24 @@ function jcOf(y,m,d){ return JIANCHU[(ZHI.indexOf(dayZhi(y,m,d))-ZHI.indexOf(mon
 
 /* 真实干支历法（已核验：1949-10-01=甲子） */
 function jdn(y,m,d){ const a=Math.floor((14-m)/12), yy=y+4800-a, mm=m+12*a-3; return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045; }
+/* 神煞（以日干/日支查，命中地支即带）+ 流年 */
+const _GUI={甲:['丑','未'],戊:['丑','未'],庚:['丑','未'],乙:['子','申'],己:['子','申'],丙:['亥','酉'],丁:['亥','酉'],壬:['卯','巳'],癸:['卯','巳'],辛:['寅','午']};
+const _WCH={甲:'巳',乙:'午',丙:'申',戊:'申',丁:'酉',己:'酉',庚:'亥',辛:'子',壬:'寅',癸:'卯'};
+const _YIMA={申:'寅',子:'寅',辰:'寅',寅:'申',午:'申',戌:'申',巳:'亥',酉:'亥',丑:'亥',亥:'巳',卯:'巳',未:'巳'};
+const _HGAI={申:'辰',子:'辰',辰:'辰',寅:'戌',午:'戌',戌:'戌',巳:'丑',酉:'丑',丑:'丑',亥:'未',卯:'未',未:'未'};
+function shenshaOf(dg,dz,zhis){ const out=[],has=z=>zhis.includes(z);
+  if((_GUI[dg]||[]).some(has)) out.push(['天乙贵人','逢凶化吉 · 贵人相助']);
+  if(has(_WCH[dg])) out.push(['文昌','聪慧好学 · 利文书考运']);
+  if(has(_YIMA[dz])) out.push(['驿马','好动多变 · 利出行迁移']);
+  if(has(_HGAI[dz])) out.push(['华盖','才情孤高 · 近艺术玄学']);
+  if(has(taohua(dz))) out.push(['咸池桃花','魅力人缘 · 异性缘佳']);
+  return out; }
+const LN_TIP={比肩:'今年宜协作、广结善缘，量力而为。',劫财:'今年理财稳一点，钱财与朋友分清。',食神:'今年灵感与口福俱佳，适合表达与享受。',伤官:'今年才华外露，留意言语分寸。',正财:'今年踏实进财，正道得利。',偏财:'今年机遇偏财多，见好就收。',正官:'今年利事业名分，守规矩有回报。',七杀:'今年压力即动力，稳住节奏。',正印:'今年长辈贵人相助，宜学习沉淀。',偏印:'今年思虑独到，小心钻牛角尖。'};
+function liunianInfo(dg){ const n=new Date(),cy=liChunYear(n.getFullYear(),n.getMonth()+1,n.getDate()),lg=yearGan(cy),lz=yearZhi(cy),ss=shishen(dg,lg); return {gz:lg+lz,ss,tip:LN_TIP[ss]||'顺势而为，平常心最好。',year:n.getFullYear()}; }
+/* 真太阳时：均时差(分钟) + 日序 */
+function _doy(y,m,d){ return Math.round((new Date(y,m-1,d)-new Date(y,0,0))/86400000); }
+function eot(y,m,d){ const B=2*Math.PI*(_doy(y,m,d)-81)/364; return 9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B); }
+function pad2(n){ return (n<10?'0':'')+n; }
 function dayGan(y,m,d){ return GAN[(jdn(y,m,d)+9)%10]; }
 function dayZhi(y,m,d){ return ZHI[(jdn(y,m,d)+1)%12]; }
 function shichenIdx(h){ return Math.floor(((h+1)%24)/2); }
@@ -492,9 +616,17 @@ $('share').addEventListener('click',()=>{ if(!lastRes)return; const res=lastRes,
   bh.add(new Option('不确定时辰',-1));
   const ranges=['23-1','1-3','3-5','5-7','7-9','9-11','11-13','13-15','15-17','17-19','19-21','21-23'];
   SHICHEN.forEach((s,i)=>bh.add(new Option(s+'时（'+ranges[i]+'）',i)));
+  const CITIES=[['北京',116.4],['上海',121.5],['广州',113.3],['深圳',114.1],['成都',104.1],['重庆',106.5],['杭州',120.2],['武汉',114.3],['西安',108.9],['南京',118.8],['天津',117.2],['苏州',120.6],['郑州',113.6],['长沙',112.9],['沈阳',123.4],['青岛',120.4],['昆明',102.7],['哈尔滨',126.6],['乌鲁木齐',87.6],['拉萨',91.1],['兰州',103.8],['南宁',108.4],['福州',119.3],['合肥',117.3],['太原',112.5],['石家庄',114.5],['长春',125.3],['贵阳',106.7],['海口',110.3],['香港',114.2],['台北',121.5]];
+  $('bcity').add(new Option('不校正（按所选时辰）',''));  CITIES.forEach(c=>$('bcity').add(new Option(c[0]+'（'+c[1]+'°E）',c[1])));
+  $('tstToggle').addEventListener('click',()=>{ const p=$('tstPanel'),o=p.style.display==='none'; p.style.display=o?'block':'none'; $('tstToggle').textContent=(o?'▾':'▸')+' 真太阳时校正（更严谨）'; });
   let sex='男'; document.querySelectorAll('#sex button').forEach(b=>b.addEventListener('click',()=>{ sex=b.dataset.s; document.querySelectorAll('#sex button').forEach(x=>x.classList.toggle('on',x===b)); }));
   $('calc').addEventListener('click',()=>{
-    const y=+by.value, m=+bm.value, d=+bd.value, hi=+bh.value, lcY=liChunYear(y,m,d);
+    const y=+by.value, m=+bm.value, d=+bd.value, lcY=liChunYear(y,m,d);
+    let hi=+bh.value, tstMsg='';
+    const _cl=$('bcity').value, _bt=$('btime').value;
+    if($('tstPanel').style.display!=='none' && _cl && _bt){ const lng=+_cl, hh=+_bt.split(':')[0], mm=+_bt.split(':')[1], lc=(lng-120)*4, e=eot(y,m,d); let tot=hh*60+mm+lc+e; while(tot<0)tot+=1440; while(tot>=1440)tot-=1440; const sh=Math.floor(tot/60); hi=shichenIdx(sh);
+      tstMsg=`钟表 ${pad2(hh)}:${pad2(mm)}　＋经度差 ${lc>=0?'+':''}${lc.toFixed(0)}分　＋均时差 ${e>=0?'+':''}${e.toFixed(0)}分　→　真太阳时 ${pad2(sh)}:${pad2(tot%60)}，即 <b>${SHICHEN[hi]}时</b>`; }
+    $('tstOut').style.display=tstMsg?'block':'none'; if(tstMsg)$('tstOut').innerHTML='☉ '+tstMsg;
     const yg=yearGan(lcY), yz=yearZhi(lcY), mz=monthZhi(y,m,d), mg=monthGan(lcY,mz), dg=dayGan(y,m,d), dz=dayZhi(y,m,d);
     let tg='—',tz='—'; if(hi>=0){ tz=SHICHEN[hi]; tg=hourGan(dg,hi); }
     const pillars=[['年',yg,yz],['月',mg,mz],['日',dg,dz],['时',tg,tz]];
@@ -505,7 +637,11 @@ $('share').addEventListener('click',()=>{ if(!lastRes)return; const res=lastRes,
     for(const ch of chars){ const w=GAN_WX[ch]||ZHI_WX[ch]; if(w)cnt[w]++; }
     const miss=Object.keys(cnt).filter(k=>cnt[k]===0);
     $('brow').innerHTML=`生肖 <b>${animal}</b>　·　日主 <b>${dg}（${GAN_WX[dg]}）</b>　·　性别 ${sex}`;
-    $('wxbar').innerHTML=['木','火','土','金','水'].map(w=>`<div class="wx-seg bg-${WX_CLS[w]} m-${WX_CLS[w]}">${w} ${cnt[w]}</div>`).join('');
+    $('wxbar').innerHTML=(()=>{ const ws=['木','火','土','金','水'], mx=Math.max(1,...ws.map(w=>cnt[w])); return ws.map(w=>`<div class="wx-row m-${WX_CLS[w]}${cnt[w]===0?' dim':''}"><span class="wx-el">${w}</span><div class="wx-track"><i style="width:${(cnt[w]/mx*100).toFixed(0)}%"></i></div><span class="wx-n">${cnt[w]}</span></div>`).join(''); })();
+    const zhis=[yz,mz,dz]; if(hi>=0)zhis.push(tz); const sss=shenshaOf(dg,dz,zhis);
+    $('shensha').innerHTML='<div class="ss-h">神 煞</div><div class="ss-list">'+(sss.length?sss.map(s=>`<span class="ss-badge"><b>${s[0]}</b><i>${s[1]}</i></span>`).join(''):'<span class="ss-none">此命暂无显著神煞，平稳是福。</span>')+'</div>';
+    const ln=liunianInfo(dg);
+    $('liunian').innerHTML=`<div class="ss-h">流 年 · ${ln.year}</div><div class="ln-card"><span class="ln-gz">${ln.gz}</span><div class="ln-mid"><span class="ln-ss">${ln.ss}</span><span class="ln-tip">${ln.tip}</span></div></div>`;
     // 大运：年干阴阳+性别定顺逆，数到节气定起运，月柱顺/逆排六十甲子
     const yangY=GAN.indexOf(yg)%2===0, shun=(yangY&&sex==='男')||(!yangY&&sex==='女');
     const reprH=hi>=0?[23,1,3,5,7,9,11,13,15,17,19,21][hi]:12, bjd=jdBJ(y,m,d,reprH), lamB=_sunLong(bjd);
@@ -652,6 +788,13 @@ function tDrawSet(){ const sp=SPREADS[tmode];
   else { const a=[...Array(78).keys()]; for(let i=77;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];} tcards=a.slice(0,sp.n).map(idx=>({idx,rev:Math.random()<0.45})); } }
 function tCardHTML(o,pos){ const c=TAROT[o.idx], sp=SPREADS[tmode];
   return `<div class="tcard${o.rev?' rev':''}" data-pos="${pos}"><div class="tflip"><div class="tinner"><div class="tface tback"><span class="tb-glyph">☯</span></div><div class="tface tfront"><div class="tnum ${c.cls}">${c.tag}</div><div class="tzh">${c.zh}</div><div class="ten">${c.en}</div><div class="tkw">${c.kw}</div></div></div></div><div class="tpos">${sp.pos[pos]}</div></div>`; }
+/* 3D 磁力倾斜 + 跟随指针的微光（Glare） */
+function initTilt(el,max){ if(!el||el._tilt)return; el._tilt=1; const g=document.createElement('div'); g.className='glare'; el.appendChild(g);
+  el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+    el.style.transform='perspective(800px) rotateX('+((.5-py)*max).toFixed(2)+'deg) rotateY('+((px-.5)*max).toFixed(2)+'deg) scale(1.04)';
+    g.style.opacity=.5; g.style.background='radial-gradient(circle at '+(px*100).toFixed(0)+'% '+(py*100).toFixed(0)+'%, rgba(255,246,214,.6), transparent 55%)'; });
+  el.addEventListener('pointerleave',()=>{ el.style.transform=''; g.style.opacity='0'; }); }
+try{ initTilt($('card'),7); }catch(e){}
 function renderTarot(){ const sp=SPREADS[tmode], stage=$('tarot-stage');
   stage.className='tstage-'+tmode; $('tarot-read').innerHTML=''; $('tarot-read').classList.remove('show');
   if(tmode==='celtic'){
@@ -659,7 +802,7 @@ function renderTarot(){ const sp=SPREADS[tmode], stage=$('tarot-stage');
     const staff=tcards.slice(6).map((o,i)=>tCardHTML(o,i+6)).join('');
     stage.innerHTML=`<div class="celtic-cross">${cross}</div><div class="celtic-staff">${staff}</div>`;
   } else stage.innerHTML=tcards.map((o,i)=>tCardHTML(o,i)).join('');
-  stage.querySelectorAll('.tcard').forEach(el=>el.querySelector('.tflip').addEventListener('click',()=>flipTarot(el)));
+  stage.querySelectorAll('.tcard').forEach(el=>{ const tf=el.querySelector('.tflip'); tf.addEventListener('click',()=>flipTarot(el)); initTilt(tf,10); });
   $('thint').style.display='block'; $('thint').textContent=sp.lock?'✦ 今日塔罗 · 轻触翻开 ✦':'✦ 轻触牌面 · 逐张翻开 ✦'; }
 function flipTarot(el){ if(el.classList.contains('flipped'))return; el.classList.add('flipped');
   const pos=+el.dataset.pos, o=tcards[pos], c=TAROT[o.idx], sp=SPREADS[tmode];
@@ -681,6 +824,16 @@ setTMode('daily');
 document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b)); document.body.dataset.board=b.dataset.b; }));
 
+/* 3D 磁力倾斜 + 跟随指针的微光（材质真实感） */
+function initTilt(el, maxDeg){ if(!el||el._tilt)return; el._tilt=1; maxDeg=maxDeg||9;
+  let glare=el.querySelector(':scope > .glare'); if(!glare){ glare=document.createElement('div'); glare.className='glare'; el.appendChild(glare); }
+  el.addEventListener('pointerenter',()=>{ el.style.transition='transform .14s ease'; });
+  el.addEventListener('pointermove',e=>{ const r=el.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+    const rx=(0.5-py)*maxDeg*2, ry=(px-0.5)*maxDeg*2; el.style.transform=`perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(1.02)`;
+    glare.style.opacity=1; glare.style.background=`radial-gradient(circle at ${(px*100).toFixed(1)}% ${(py*100).toFixed(1)}%, rgba(255,238,196,.30), rgba(255,238,196,0) 55%)`; });
+  el.addEventListener('pointerleave',()=>{ el.style.transition=''; el.style.transform=''; glare.style.opacity=0; }); }
+initTilt($('card'));
+
 const cv=$('bg'), ctx=cv.getContext('2d'); let W,H,dpr,ps=[];
 function spawn(){ return { x:Math.random()*W, y:H+Math.random()*H, vy:-(0.2+Math.random()*0.6), r:0.6+Math.random()*1.8, tw:Math.random()*7, hue:Math.random()<0.5?42:10 }; }
 function resize(){ dpr=Math.min(devicePixelRatio||1,2); W=innerWidth;H=innerHeight; cv.width=W*dpr;cv.height=H*dpr; cv.style.width=W+'px';cv.style.height=H+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); ps=Array.from({length:Math.min(70,(W*H/20000)|0)},spawn); }
@@ -690,6 +843,151 @@ function loop(){ ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='lighter';
     const a=(0.3+0.5*Math.sin(p.tw))*Math.min(1,(H-p.y)/H+0.2), g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
     g.addColorStop(0,`hsla(${p.hue},80%,72%,${a*0.7})`); g.addColorStop(1,`hsla(${p.hue},80%,72%,0)`); ctx.fillStyle=g; ctx.beginPath();ctx.arc(p.x,p.y,p.r*5,0,7);ctx.fill(); }
   ctx.globalCompositeOperation='source-over'; requestAnimationFrame(loop); }
+/* ========= 卜卦 · 周易（摇卦成卦 + 变卦，按「问题+日期」确定性） ========= */
+(function initGua(){
+  const TRI={乾:'111',兑:'110',离:'101',震:'100',巽:'011',坎:'010',艮:'001',坤:'000'};
+  const GUA=[
+  ['乾','乾','乾','元亨利贞','刚健进取的时机，主动去做；但刚极易折，记得张弛有度。'],
+  ['坤','坤','坤','厚德载物','宜柔顺承载、踏实积累，不争先而后得，稳稳托住一切。'],
+  ['震','坎','屯','始难','万事开头难，像草木破土；别急，扎好根再图发展。'],
+  ['坎','艮','蒙','启蒙','心中尚有迷雾；虚心求教、慢慢启明，问对人是关键。'],
+  ['乾','坎','需','等待','时机未到，宜耐心等待、养精蓄锐，不冒进自有转机。'],
+  ['坎','乾','讼','争讼','有争执口舌；宜退一步、求和解，争到底两败俱伤。'],
+  ['坎','坤','师','兵众','做事需纪律与统领；师出有名方能成，讲章法别蛮干。'],
+  ['坤','坎','比','亲附','宜亲近贤者、广结善缘；众人扶持，孤掌难鸣。'],
+  ['乾','巽','小畜','小蓄','力量尚小，先小步积累、以柔养刚，大事暂缓。'],
+  ['兑','乾','履','履践','如履薄冰般谨慎前行；守礼有度，反而平安。'],
+  ['乾','坤','泰','通泰','天地交泰、上下通畅，正是顺遂兴旺之时，好好把握。'],
+  ['坤','乾','否','闭塞','一时闭塞不通；宜守正自持、静待转机，别强求。'],
+  ['离','乾','同人','和同','与人同心同德；开诚布公，合作能成大事。'],
+  ['乾','离','大有','大有','大有收获、丰盛在望；守住谦德，福气更长久。'],
+  ['艮','坤','谦','谦逊','谦谦君子，越低调越受敬；谦受益、满招损。'],
+  ['坤','震','豫','和乐','顺势而动、心生欢喜；提前备好，事半功倍。'],
+  ['震','兑','随','随顺','顺时而随、择善而从；跟对方向，水到渠成。'],
+  ['巽','艮','蛊','治弊','积弊待整治；正视问题、动手革新，治乱方能更新。'],
+  ['兑','坤','临','临进','阳气渐长、步步临近；主动靠近目标，前景向好。'],
+  ['坤','巽','观','观瞻','宜静观默察、看清全局；看明白了再动不迟。'],
+  ['震','离','噬嗑','啮合','有阻碍需排除；果断处理、咬合贯通，问题才解。'],
+  ['离','艮','贲','文饰','适度修饰、内外兼美；质朴为本、文采为辅。'],
+  ['坤','艮','剥','剥落','处于消剥之时；宜守不宜进，保存实力、静待回春。'],
+  ['震','坤','复','复返','一阳来复、否极泰来；旧的过去、新机萌动，可重新出发。'],
+  ['震','乾','无妄','无妄','守正无妄念；顺其自然、不强求，真诚便得天助。'],
+  ['乾','艮','大畜','大蓄','大力积蓄、厚积薄发；养足实力，终能大用。'],
+  ['震','艮','颐','颐养','宜慎言节食、养身养德；养对了人和事，自然丰足。'],
+  ['巽','兑','大过','大过','担子超过常态；非常时行非常事，量力而为别压垮自己。'],
+  ['坎','坎','坎','重险','重重险阻；宜诚心持守、稳住心神，险中有信便能渡过。'],
+  ['离','离','离','附丽','如火附丽；宜依附正道、保持光明，柔顺中守住分寸。'],
+  ['艮','兑','咸','感应','两情相感、心意相通；真诚相待，缘分自来。'],
+  ['巽','震','恒','恒久','贵在持之以恒；守常道、不三心二意，久久为功。'],
+  ['艮','乾','遁','退避','宜适时退避、急流勇退；以退为进，保全自己。'],
+  ['乾','震','大壮','壮盛','阳刚壮盛、势头正旺；但壮不可妄动，守正才吉。'],
+  ['坤','离','晋','晋升','如日东升、步步高升；光明磊落，前程向上。'],
+  ['离','坤','明夷','晦暗','光明受损、处境晦暗；宜内藏其明、外示柔顺，守得云开。'],
+  ['离','巽','家人','齐家','各安其位、家和万事兴；先理好身边人事。'],
+  ['兑','离','睽','乖异','意见相左、暂时背离；求同存异，小事可成。'],
+  ['艮','坎','蹇','险阻','前路艰难；宜停下反求诸己、寻贵人相助，不硬闯。'],
+  ['坎','震','解','纾解','险难渐解、冰雪消融；把握时机解开旧结，轻装上路。'],
+  ['兑','艮','损','减损','有所减损方有所得；损去浮华、回归本真，先舍后得。'],
+  ['震','巽','益','增益','损上益下、利于行动；把握机遇、积极进取，正当其时。'],
+  ['乾','兑','夬','决断','到了果断了结之时；光明正大地处理，别拖泥带水。'],
+  ['巽','乾','姤','相遇','不期而遇、阴长之始；机缘与隐忧并存，留个心眼。'],
+  ['坤','兑','萃','荟萃','人心汇聚、群贤毕至；顺势聚合，能成大事。'],
+  ['巽','坤','升','上升','柔顺上行、积小成大；循序渐进，步步高升。'],
+  ['坎','兑','困','困顿','一时困顿受阻；宜守正自处、内修以待，困极必通。'],
+  ['巽','坎','井','养井','如井养人、源远流长；踏实奉献、修缮根本，得人滋养。'],
+  ['离','兑','革','变革','到了变革更新之时；顺天应人、把握时机，旧去新来。'],
+  ['巽','离','鼎','鼎新','革故鼎新、稳重图成；如鼎之稳，成就一番事业。'],
+  ['震','震','震','震动','突来震动、惊而不乱；临危持守，过后反得安稳。'],
+  ['艮','艮','艮','止静','宜适可而止、安住当下；该停则停，心定自安。'],
+  ['艮','巽','渐','渐进','循序渐进、稳扎稳打；如雁渐行，慢即是快。'],
+  ['兑','震','归妹','归从','顺势归从、但需守正；看清位置、安分守己为吉。'],
+  ['离','震','丰','丰盛','丰盛盛大之时、如日中天；惜福守成，盛极宜防。'],
+  ['艮','离','旅','行旅','如行旅在外；宜随和谨慎、柔顺待人，安稳过渡。'],
+  ['巽','巽','巽','顺入','如风入物、谦逊渗透；以柔顺、巧沟通成事。'],
+  ['兑','兑','兑','喜悦','和悦喜乐、以诚待人；愉快沟通，人和事顺。'],
+  ['坎','巽','涣','涣散','涣散需重聚人心；化解隔阂、凝聚共识，转危为安。'],
+  ['兑','坎','节','节制','凡事有节、适可而止；守住分寸，过犹不及。'],
+  ['兑','巽','中孚','诚信','心怀诚信、表里如一；以诚动人，无往不利。'],
+  ['艮','震','小过','小过','宜小事谨慎、不宜大动；低调务实，过分则险。'],
+  ['离','坎','既济','已成','事已初成；但宜防患于未然，守成更需谨慎。'],
+  ['坎','离','未济','未成','事将成未成；慎终如始、再加把劲，曙光在前。']];
+  const HEX={}; GUA.forEach(g=>{ HEX[TRI[g[0]]+TRI[g[1]]]={lo:g[0],up:g[1],name:g[2],judg:g[3],read:g[4]}; });
+  /* 六爻装卦（高阶）：京房八宫生成世应 + 纳甲地支 + 六亲，纯算法、已核对古籍 */
+  const _PAL=[['乾','金'],['坎','水'],['艮','土'],['震','木'],['巽','木'],['离','火'],['坤','土'],['兑','金']];
+  const GONG={}; _PAL.forEach(([p,wx])=>{ const pb=TRI[p], base=(pb+pb).split('').map(Number), rec=(b,shi)=>GONG[b.join('')]={wx,shi,gong:p};
+    rec(base.slice(),6); let cur=base.slice(); for(let k=0;k<5;k++){ cur=cur.slice(); cur[k]^=1; rec(cur,k+1); } let you=cur.slice(); you[3]^=1; rec(you,4); let gui=you.slice(); for(let i=0;i<3;i++)gui[i]=+pb[i]; rec(gui,3); });
+  const _SHENG={木:'火',火:'土',土:'金',金:'水',水:'木'}, _KE={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  const _ZB={子:'水',丑:'土',寅:'木',卯:'木',辰:'土',巳:'火',午:'火',未:'土',申:'金',酉:'金',戌:'土',亥:'水'};
+  const _WXC={木:'wood',火:'fire',土:'earth',金:'metal',水:'water'};
+  const _ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const _YANG={乾:0,震:0,坎:2,艮:4}, _YIN={坤:7,巽:1,离:3,兑:5};
+  function _na(t){ if(t in _YANG){ const s=_YANG[t]; return [0,1,2,3,4,5].map(i=>_ZHI[(s+2*i)%12]); } const s=_YIN[t]; return [0,1,2,3,4,5].map(i=>_ZHI[((s-2*i)%12+12)%12]); }
+  function _liu(g,l){ if(l===g)return '兄弟'; if(_SHENG[l]===g)return '父母'; if(_SHENG[g]===l)return '子孙'; if(_KE[l]===g)return '官鬼'; return '妻财'; }
+  function zhuangGua(lo,up,ls){ const g=GONG[TRI[lo]+TRI[up]]; if(!g)return ''; const L=_na(lo),U=_na(up), zhi=[L[0],L[1],L[2],U[3],U[4],U[5]], y=(g.shi+2)%6+1;
+    let h='<div class="gp-sub">'+g.gong+'宫 · 宫五行'+g.wx+'　│　世在 '+g.shi+' 爻 · 应在 '+y+' 爻</div><table class="gp-t">';
+    for(let i=5;i>=0;i--){ const z=zhi[i],wx=_ZB[z],lp=_liu(g.wx,wx),mk=(i+1===g.shi?'世':i+1===y?'应':''),dong=(ls&&ls[i]&&ls[i].chg)?'<b class="gp-dong">动</b>':'';
+      h+='<tr><td class="gp-pos">'+(i+1)+'爻</td><td class="gp-liu">'+lp+'</td><td class="m-'+_WXC[wx]+'">'+z+'<span class="gp-wx">'+wx+'</span></td><td class="gp-mk">'+mk+dong+'</td></tr>'; }
+    return h+'</table>'; }
+  function castLines(seed){ const r=mulberry32(hash(seed)); const ls=[]; for(let i=0;i<6;i++){ let s=0; for(let c=0;c<3;c++)s+=(r()<.5?2:3); ls.push({yang:s===7||s===9, chg:s===6||s===9}); } return ls; }
+  function binOf(ls,bian){ return ls.map(l=>{ let y=l.yang; if(bian&&l.chg)y=!y; return y?'1':'0'; }).join(''); }
+  const XT={1:'乾',2:'兑',3:'离',4:'震',5:'巽',6:'坎',7:'艮',8:'坤'};
+  const TWX={乾:'金',兑:'金',离:'火',震:'木',巽:'木',坎:'水',艮:'土',坤:'土'};
+  const YAOPOS=['初爻（事情的开端 · 根基）','二爻（进展之中 · 内里）','三爻（转折之处 · 宜谨慎）','四爻（接近成局 · 外境）','五爻（主事关键 · 多有功）','上爻（事情的终局 · 极则反）'];
+  function tiyong(downName,upName,mv){ const up=mv>=4, yong=up?upName:downName, ti=up?downName:upName, tw=TWX[ti], yw=TWX[yong]; let rel,good;
+    if(tw===yw){rel='体用比和';good=1;} else if(SHENG[yw]===tw){rel='用生体（得助）';good=1;} else if(KE[tw]===yw){rel='体克用（可制）';good=1;} else if(SHENG[tw]===yw){rel='体生用（耗泄）';good=0;} else {rel='用克体（受制）';good=0;}
+    return `体卦【${ti}·${tw}】 用卦【${yong}·${yw}】：${rel} —— ${good?'于事较顺，可为。':'于事稍逆，宜缓、宜守、宜借力。'}`; }
+  function meihua(up,lo,mv){ const downName=XT[lo],upName=XT[up], bin=TRI[downName]+TRI[upName], ls=bin.split('').map((c,i)=>({yang:c==='1',chg:i===mv-1})); return {ls,ty:tiyong(downName,upName,mv)}; }
+  let gmode='coin', busy=false;
+  function buildSet(){ if(gmode==='coin'){ const q=($('guaQ').value||'').trim(); return {ls:castLines('gua|'+todayKey()+'|'+q), ty:''}; }
+    if(gmode==='time'){ const n=new Date(), yz=((n.getFullYear()-4)%12+12)%12+1, mo=n.getMonth()+1, da=n.getDate(), hz=Math.floor(((n.getHours()+1)%24)/2)+1; return meihua((yz+mo+da)%8||8,(yz+mo+da+hz)%8||8,(yz+mo+da+hz)%6||6); }
+    const a=Math.abs(+$('guaN1').value|0)||7, b=Math.abs(+$('guaN2').value|0)||3; return meihua(a%8||8,b%8||8,(a+b)%6||6); }
+  function cast(){ if(busy)return; const set=buildSet(), ls=set.ls, main=HEX[binOf(ls,false)], chgIdx=ls.map((l,i)=>l.chg?i:-1).filter(i=>i>=0);
+    $('guaOut').style.display='block';
+    $('guaSym').innerHTML=[5,4,3,2,1,0].map(i=>{ const l=ls[i]; return `<div class="gua-line ${l.yang?'yang':'yin'}${l.chg?' chg':''}">${l.yang?'<i></i>':'<i></i><i></i>'}</div>`; }).join('');
+    $('guaName').textContent=''; $('guaJudg').textContent=''; $('guaRead').innerHTML=''; $('guaBian').innerHTML='';
+    busy=true; const rows=$('guaSym').querySelectorAll('.gua-line'); rows.forEach((el,k)=> setTimeout(()=>el.classList.add('show'),(5-k)*140));
+    setTimeout(()=>{ $('guaName').textContent=main.name+'卦'; $('guaJudg').textContent=main.judg; $('guaRead').innerHTML='〈'+main.up+'上 '+main.lo+'下〉　'+main.read;
+      let h=''; if(chgIdx.length){ const bb=HEX[binOf(ls,true)]; h='<b>本卦</b> '+main.name+'卦　→　<b>变卦</b> '+bb.name+'卦<br>'+chgIdx.map(i=>'· '+YAOPOS[i]+' 动').join('<br>')+'<br>事情将朝「'+bb.name+'」的方向变化：'+bb.read; }
+      else h='<b>静卦</b>（无动爻）—— 此事暂稳，守住当下即可。';
+      if(set.ty) h+='<br><br><b>体用</b>：'+set.ty;
+      $('guaBian').innerHTML=h;
+      if($('guaProChk').checked){ $('guaPro').style.display='block'; $('guaPro').innerHTML='<div class="gp-h">六 爻 装 卦</div>'+zhuangGua(main.lo,main.up,ls)+'<div class="gp-note">纳甲地支 + 京房八宫世应 + 六亲，纯算法推算（已核对古籍）。用神取舍因事而异，留待自参。</div>'; }
+      else $('guaPro').style.display='none';
+      busy=false; }, 6*140+320); }
+  function setGM(g){ gmode=g; document.querySelectorAll('#guaModes button').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
+    $('guaNum').style.display=g==='num'?'flex':'none'; $('guaQ').style.display=g==='coin'?'block':'none';
+    $('guaTip').textContent=g==='coin'?'同一件事同一天，卦象不变':g==='time'?'按此刻的年月日时起卦（梅花易数）':'随心报两个数起卦（梅花易数）';
+    $('guaCast').textContent=g==='coin'?'摇 卦':'起 卦'; }
+  document.querySelectorAll('#guaModes button').forEach(b=>b.addEventListener('click',()=>setGM(b.dataset.g)));
+  $('guaCast').addEventListener('click',cast); setGM('coin');
+})();
+
+/* WebGL 星云烟雾背景（香火缭绕 / 星云流转）· 失败自动回退到纯渐变 */
+(function neb(){ const c=$('neb'); if(!c)return; let gl; try{ gl=c.getContext('webgl')||c.getContext('experimental-webgl'); }catch(e){} if(!gl){ c.style.display='none'; return; }
+  const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const fs='precision mediump float;uniform vec2 res;uniform float t;uniform vec3 cA,cB,cC;'+
+   'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
+   'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}'+
+   'float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*n(p);p*=2.02;a*=.5;}return s;}'+
+   'void main(){vec2 uv=gl_FragCoord.xy/res.xy;vec2 p=vec2(uv.x*res.x/res.y,uv.y)*2.6;float tt=t*.03;p.y-=tt*1.6;'+
+   'vec2 q=vec2(fbm(p+tt),fbm(p+vec2(5.2,1.3)-tt));float f=fbm(p+2.2*q+tt*.6);'+
+   'vec3 col=mix(cA,cB,smoothstep(.28,.72,f));col=mix(col,cC,smoothstep(.62,.98,f)*.55);'+
+   'col+=cC*.09*pow(1.-uv.y,2.5);col*=.88+.22*f;gl_FragColor=vec4(col,1.);}';
+  function sh(ty,src){ const s=gl.createShader(ty); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+  const pr=gl.createProgram(); gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){ c.style.display='none'; return; }
+  gl.useProgram(pr); const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const lp=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+  const uRes=gl.getUniformLocation(pr,'res'), uT=gl.getUniformLocation(pr,'t');
+  const uA=gl.getUniformLocation(pr,'cA'), uB=gl.getUniformLocation(pr,'cB'), uC=gl.getUniformLocation(pr,'cC');
+  const PAL=[{n:'朱砂',c:[[.05,.035,.022],[.32,.07,.05],[.66,.48,.2]],s:'#b5302b'},{n:'玄青',c:[[.02,.04,.06],[.05,.18,.28],[.32,.62,.72]],s:'#3fa6b8'},{n:'紫气',c:[[.04,.025,.06],[.18,.07,.3],[.62,.36,.78]],s:'#9a5bd6'},{n:'青冥',c:[[.02,.05,.04],[.05,.22,.14],[.4,.72,.44]],s:'#54c07a'},{n:'鎏金',c:[[.05,.04,.02],[.3,.2,.05],[.82,.62,.22]],s:'#e3c074'},{n:'月白',c:[[.05,.05,.07],[.18,.2,.26],[.64,.68,.8]],s:'#aeb8cc'}];
+  let pidx=0; try{ pidx=Math.min(PAL.length-1,Math.max(0,+localStorage.getItem('xuan_neb')||0)); }catch(e){}
+  function applyPal(i){ pidx=i; const p=PAL[i]; gl.uniform3f(uA,p.c[0][0],p.c[0][1],p.c[0][2]); gl.uniform3f(uB,p.c[1][0],p.c[1][1],p.c[1][2]); gl.uniform3f(uC,p.c[2][0],p.c[2][1],p.c[2][2]); try{localStorage.setItem('xuan_neb',i);}catch(e){} document.querySelectorAll('#nebpick b').forEach((d,k)=>d.classList.toggle('on',k===i)); }
+  const pk=document.createElement('div'); pk.id='nebpick'; PAL.forEach((p,i)=>{ const b=document.createElement('b'); b.title=p.n; b.style.background=p.s; b.addEventListener('click',()=>applyPal(i)); pk.appendChild(b); }); document.body.appendChild(pk); applyPal(pidx);
+  function rz(){ const sc=.6; c.width=Math.max(2,innerWidth*sc|0); c.height=Math.max(2,innerHeight*sc|0); c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px'; gl.viewport(0,0,c.width,c.height); }
+  rz(); addEventListener('resize',rz);
+  const t0=performance.now(); (function draw(){ gl.uniform2f(uRes,c.width,c.height); gl.uniform1f(uT,(performance.now()-t0)/1000); gl.drawArrays(gl.TRIANGLES,0,3); requestAnimationFrame(draw); })();
+})();
 resize(); requestAnimationFrame(loop);
 })();
 </script>
