@@ -2828,6 +2828,48 @@ function loop(){
       if (ctx && ctx.state === 'suspended') ctx.resume();
       return ctx;
     }
+
+    // 硬件级物理微震反馈 (兼容 iOS / Android 触感马达)
+    function triggerHaptic(pattern = 10) {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(pattern);
+        }
+      } catch(e) {}
+    }
+
+    // 苹果级极简幽微触感音发生器 (Apple Taptic Engine Style Micro-Impulse)
+    // 彻底抛弃一切多余旋律、高频尖锐与电子感，仅保留 15~24ms 的极低频物理阻尼微叩
+    function microTap(freq = 150, duration = 0.022, vol = 0.048, clickRatio = 1.0) {
+      if (muted) return;
+      const ac = getCtx(); if (!ac) return;
+      const now = ac.currentTime;
+
+      // 1. 低频物理微顿 (Physical Body Impulse, ~150Hz 极速阻尼下沉，类似手指叩击案几)
+      const osc = ac.createOscillator(), gain = ac.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + duration);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain); gain.connect(ac.destination);
+      osc.start(now); osc.stop(now + duration + 0.005);
+
+      // 2. 超微阻尼瞬态触碰点 (Muted High-Frequency Click)
+      if (clickRatio > 0) {
+        const clickOsc = ac.createOscillator(), clickGain = ac.createGain();
+        clickOsc.type = 'sine';
+        clickOsc.frequency.setValueAtTime(820, now);
+        clickOsc.frequency.exponentialRampToValueAtTime(280, now + 0.012);
+        clickGain.gain.setValueAtTime(0.001, now);
+        clickGain.gain.linearRampToValueAtTime(vol * 0.42 * clickRatio, now + 0.002);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.013);
+        clickOsc.connect(clickGain); clickGain.connect(ac.destination);
+        clickOsc.start(now); clickOsc.stop(now + 0.015);
+      }
+    }
+
     return {
       toggleMute() {
         muted = !muted;
@@ -2840,164 +2882,57 @@ function loop(){
       },
       isMuted() { return muted; },
 
-      // 东方古铜钱摇卦落盘沉音 (3枚古铜钱抛掷于沉木卦盘之浑厚铜鸣与错落弹跳，彻底告别街机叮叮叮)
+      // 1. 周易卜卦：精密双微顿击 (Precision Double Micro-Tap: "tuk-tk", 38ms即止，温润干脆)
       playCoin() {
-        if (muted) return;
-        const ac = getCtx(); if (!ac) return;
-        const now = ac.currentTime;
-
-        // 3~4枚古铜钱自然错落跌落时间点 (微时间物理随机抖动)
-        const bounces = [0, 0.036, 0.082, 0.138];
-        bounces.forEach((dt, bIdx) => {
-          const t = now + dt;
-          const decay = 0.055 + Math.random() * 0.025;
-          const hitVol = 0.14 / (1 + bIdx * 0.45);
-
-          // 1. 沉木卦盘受击低频钝响 (Low Wooden Board Thump)
-          const woodOsc = ac.createOscillator(), woodGain = ac.createGain();
-          woodOsc.type = 'triangle';
-          woodOsc.frequency.setValueAtTime(210 + Math.random() * 25, t);
-          woodOsc.frequency.exponentialRampToValueAtTime(70, t + 0.04);
-          woodGain.gain.setValueAtTime(hitVol * 0.85, t);
-          woodGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
-          woodOsc.connect(woodGain); woodGain.connect(ac.destination);
-          woodOsc.start(t); woodOsc.stop(t + 0.05);
-
-          // 2. 青铜合金基频与非谐泛音 (Warm Antique Bronze Resonance, 920~1180Hz)
-          const baseFreq = 940 + Math.random() * 220;
-          [1, 1.48].forEach((ratio, rIdx) => {
-            const osc = ac.createOscillator(), gain = ac.createGain();
-            osc.type = 'sine';
-            const f = baseFreq * ratio;
-            osc.frequency.setValueAtTime(f, t);
-            osc.frequency.exponentialRampToValueAtTime(f * 0.94, t + decay);
-            const partialVol = hitVol * (rIdx === 0 ? 0.7 : 0.3);
-            gain.gain.setValueAtTime(0.001, t);
-            gain.gain.linearRampToValueAtTime(partialVol, t + 0.004);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + decay);
-            osc.connect(gain); gain.connect(ac.destination);
-            osc.start(t); osc.stop(t + decay + 0.01);
-          });
-
-          // 3. 铜币金属边缘擦碰高频瞬态 (Metallic Edge Friction Transient)
-          const bufSize = Math.floor(ac.sampleRate * 0.012);
-          const buf = ac.createBuffer(1, bufSize, ac.sampleRate);
-          const data = buf.getChannelData(0);
-          for (let k = 0; k < bufSize; k++) {
-            data[k] = (Math.random() * 2 - 1) * Math.exp(-k / (bufSize * 0.25));
-          }
-          const noise = ac.createBufferSource(); noise.buffer = buf;
-          const filter = ac.createBiquadFilter();
-          filter.type = 'bandpass';
-          filter.frequency.setValueAtTime(2200 + Math.random() * 600, t);
-          filter.Q.value = 5.0;
-          const nGain = ac.createGain();
-          nGain.gain.setValueAtTime(hitVol * 0.35, t);
-          nGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
-          noise.connect(filter); filter.connect(nGain); nGain.connect(ac.destination);
-          noise.start(t);
-        });
+        triggerHaptic([8, 22, 10]);
+        microTap(145, 0.024, 0.052, 1.0);
+        setTimeout(() => {
+          microTap(175, 0.018, 0.035, 0.7);
+        }, 28);
       },
 
-      // 八字排盘四柱启卦古雅五音玉磬敲击声 (Pentatonic Jade Chimes: 宫商角徵羽)
+      // 2. 八字排盘四柱启定：精准齿轮级微阻尼音 (Snap Detent Tick, 16ms，无音调无旋律，极简高级)
       playPillarDrop(idx) {
-        if (muted) return;
-        const ac = getCtx(); if (!ac) return;
-        const now = ac.currentTime;
-        // 五音升序: 徵(G4: 392Hz) -> 羽(A4: 440Hz) -> 宫(C5: 523Hz) -> 角(E5: 659Hz)
-        const scale = [392.0, 440.0, 523.25, 659.25];
-        const freq = scale[Math.min(idx, scale.length - 1)];
-
-        const osc = ac.createOscillator(), gain = ac.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-        
-        // 温润如玉的渐入与余韵
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.09, now + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
-        
-        osc.connect(gain); gain.connect(ac.destination);
-        osc.start(now); osc.stop(now + 0.3);
+        triggerHaptic(6);
+        const f = 160 + (idx % 2) * 12;
+        microTap(f, 0.018, 0.042, 0.85);
       },
 
-      // 空灵西藏颂钵天籁磬音 (Tibetan Singing Bowl Chime)
+      // 3. 灵签展开与海报落成：极幽微单音温润回甘 (Whisper Zen Touch, 432Hz 自然疗愈微泛音，平滑渐隐)
       playChime() {
         if (muted) return;
+        triggerHaptic(12);
         const ac = getCtx(); if (!ac) return;
         const now = ac.currentTime;
-        // 528Hz 治愈与平和之频 + 泛音
-        [528, 792, 1056].forEach((f, idx) => {
-          const osc = ac.createOscillator(), gain = ac.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(f, now);
-          const vol = 0.11 / (idx + 1);
-          // 消除爆音的平滑 attack (20ms)
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.linearRampToValueAtTime(vol, now + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.9 + idx * 0.3);
-          osc.connect(gain); gain.connect(ac.destination);
-          osc.start(now); osc.stop(now + 2.3);
+        const osc = ac.createOscillator(), gain = ac.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(432, now); // 432Hz 幽微正弦单音
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.035, now + 0.035);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+        osc.connect(gain); gain.connect(ac.destination);
+        osc.start(now); osc.stop(now + 0.8);
+      },
+
+      // 4. 求签星轨起动：极轻柔连续三联微阻尼 (3段极短微触感 "tk-tk-tk"，无任何滑音)
+      playBambooRattle() {
+        triggerHaptic([5, 16, 5, 16, 6]);
+        [0, 22, 44].forEach((dt, i) => {
+          setTimeout(() => {
+            microTap(185 + i * 10, 0.016, 0.032, 0.6);
+          }, dt);
         });
       },
-      
-      // 东方古法竹木签筒中空沉金共鸣与竹简散落脆击声 (Bamboo Rattle)
-      playBambooRattle() {
-        if (muted) return;
-        const ac = getCtx(); if (!ac) return;
-        const now = ac.currentTime;
 
-        // 1. 中空楠木/沉木筒体低频共鸣 (Hollow Wood Thump)
-        const bodyOsc = ac.createOscillator(), bodyGain = ac.createGain();
-        bodyOsc.type = 'triangle';
-        bodyOsc.frequency.setValueAtTime(240 + Math.random() * 40, now);
-        bodyOsc.frequency.exponentialRampToValueAtTime(90, now + 0.12);
-        bodyGain.gain.setValueAtTime(0.18, now);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
-        bodyOsc.connect(bodyGain); bodyGain.connect(ac.destination);
-        bodyOsc.start(now); bodyOsc.stop(now + 0.14);
-
-        // 2. 连续 4 段天然玉竹简错落碰撞碎响 (Crisp Bamboo Slips Clatter)
-        for (let i = 0; i < 4; i++) {
-          const osc = ac.createOscillator(), gain = ac.createGain();
-          const freq = 1000 + Math.random() * 700;
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + i * 0.042);
-          osc.frequency.exponentialRampToValueAtTime(360, now + i * 0.042 + 0.035);
-          gain.gain.setValueAtTime(0.001, now + i * 0.042);
-          gain.gain.linearRampToValueAtTime(0.12, now + i * 0.042 + 0.004);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.042 + 0.04);
-          osc.connect(gain); gain.connect(ac.destination);
-          osc.start(now + i * 0.042); osc.stop(now + i * 0.042 + 0.045);
-        }
-      },
-
-      // 塔罗翻牌与素绢轻拂微声 (Parchment Rustle)
+      // 5. 翻牌/日夜切换/轻柔纸感触碰 (Whisper Silk Tap, 16ms)
       playFlip() {
-        if (muted) return;
-        const ac = getCtx(); if (!ac) return;
-        const now = ac.currentTime;
-        const bufferSize = Math.floor(ac.sampleRate * 0.06);
-        const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
-        }
-        const noise = ac.createBufferSource(); noise.buffer = buffer;
-        const filter = ac.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 850;
-        const gain = ac.createGain();
-        gain.gain.setValueAtTime(0.11, now); gain.gain.linearRampToValueAtTime(0.005, now + 0.06);
-        noise.connect(filter); filter.connect(gain); gain.connect(ac.destination);
-        noise.start(now);
+        triggerHaptic(6);
+        microTap(210, 0.016, 0.03, 0.5);
       },
 
-      // 卜卦起卦声效根据方式自适应 (铜钱摇卦 vs 梅花易数)
+      // 6. 卜卦触发自适应
       playGuaCast(mode) {
-        if (mode === 'coin') {
-          this.playCoin();
-        } else {
-          this.playPillarDrop(2);
-        }
+        this.playCoin();
       }
     };
   })();
@@ -3036,13 +2971,12 @@ function loop(){
   const origBaziCalc = $('calc');
   if (origBaziCalc) {
     origBaziCalc.addEventListener('click', () => {
-      XuanAudio.playPillarDrop(0);
       const pEls = $('pillars').querySelectorAll('.pillar');
       pEls.forEach((p, idx) => {
         p.classList.remove('active');
         setTimeout(() => {
           p.classList.add('active');
-          if (idx > 0) XuanAudio.playPillarDrop(idx);
+          XuanAudio.playPillarDrop(idx);
         }, (idx + 1) * 140);
       });
     });
