@@ -721,6 +721,79 @@ body[data-theme="light"] .sh-name{ color:#8c6418; }
 body[data-theme="light"] .sh-poem{ color:#4e3f2e; }
 body[data-theme="light"] .sh-date{ color:#8a7a60; }
 
+/* ─── 1. 今日时空共鸣 · 流日能量卡 (Co-Star Style Daily Pulse) ─── */
+.daily-resonance{ width:100%; max-width:440px; margin:14px auto 16px; padding:14px 16px; border-radius:14px; border:1px solid rgba(232,200,115,.32); background:linear-gradient(180deg, rgba(232,200,115,.08), rgba(0,0,0,.22)); box-shadow:0 8px 24px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08); text-align:left; box-sizing:border-box; transition:all .25s ease; }
+.dr-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:8px; border-bottom:1px solid rgba(232,200,115,.16); padding-bottom:7px; }
+.dr-badge{ font-size:11px; letter-spacing:.15em; color:var(--gold-soft); font-weight:600; display:flex; align-items:center; gap:4px; }
+.dr-date{ font-size:11px; color:#a89d84; }
+.dr-profile-switch{ font-size:11px; color:var(--gold); cursor:pointer; background:rgba(232,200,115,.1); padding:2px 8px; border-radius:999px; border:1px solid rgba(232,200,115,.28); transition:all .15s ease; }
+.dr-profile-switch:hover{ background:rgba(232,200,115,.2); }
+.dr-core{ margin:8px 0; }
+.dr-theme-wrap{ display:flex; align-items:baseline; gap:8px; margin-bottom:5px; }
+.dr-theme-ss{ font-size:12px; color:var(--jade); background:rgba(168,200,160,.12); padding:1px 7px; border-radius:4px; border:1px solid rgba(168,200,160,.28); font-weight:600; }
+.dr-theme-word{ font-family:'Ma Shan Zheng',cursive; font-size:22px; color:var(--gold); letter-spacing:.06em; text-shadow:0 0 10px rgba(232,200,115,.35); }
+.dr-pulse-text{ font-size:13px; line-height:1.75; color:#f0e6cc; margin:0 0 8px; font-weight:300; }
+.dr-rel-note{ font-size:11.5px; color:var(--gold-soft); line-height:1.55; margin-bottom:8px; padding:4px 8px; border-radius:6px; background:rgba(232,200,115,.06); }
+.dr-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.dr-chip{ font-size:10.5px; padding:2px 8px; border-radius:999px; border:1px solid rgba(232,200,115,.2); background:rgba(255,255,255,.03); color:#dcd3bb; white-space:nowrap; }
+.dr-chip.c-mind{ border-color:rgba(168,200,160,.35); color:#c4e2bd; }
+.dr-chip.c-focus{ border-color:rgba(232,200,115,.35); color:var(--gold); }
+.dr-chip.c-yi{ border-color:rgba(168,200,160,.4); color:#b5e0ab; }
+.dr-chip.c-ji{ border-color:rgba(217,90,75,.35); color:#f2a79d; }
+
+body[data-theme="light"] .daily-resonance{ background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(247,242,232,.96)); border-color:rgba(140,100,24,.28); box-shadow:0 6px 20px rgba(80,58,30,.08); }
+body[data-theme="light"] .dr-top{ border-bottom-color:rgba(140,100,24,.15); }
+body[data-theme="light"] .dr-badge{ color:#8c6418; }
+body[data-theme="light"] .dr-date{ color:#7a6b54; }
+body[data-theme="light"] .dr-profile-switch{ color:#8c6418; background:rgba(140,100,24,.08); border-color:rgba(140,100,24,.22); }
+body[data-theme="light"] .dr-theme-ss{ color:#1f6e4a; background:rgba(31,110,74,.08); border-color:rgba(31,110,74,.25); }
+body[data-theme="light"] .dr-theme-word{ color:#8c6418; text-shadow:none; }
+body[data-theme="light"] .dr-pulse-text{ color:#2a2015; }
+body[data-theme="light"] .dr-rel-note{ background:rgba(140,100,24,.06); color:#765014; }
+body[data-theme="light"] .dr-chip{ background:rgba(140,100,24,.05); border-color:rgba(140,100,24,.18); color:#4e3f2e; }
+body[data-theme="light"] .dr-chip.c-mind{ color:#1f6e4a; border-color:rgba(31,110,74,.28); }
+body[data-theme="light"] .dr-chip.c-focus{ color:#8c6418; border-color:rgba(140,100,24,.3); }
+body[data-theme="light"] .dr-chip.c-yi{ color:#18613f; border-color:rgba(31,110,74,.3); }
+body[data-theme="light"] .dr-chip.c-ji{ color:#a83226; border-color:rgba(181,48,43,.3); }
+
+/* ─── 2. 周易四相：本卦、变卦、互卦、综卦栅格 ─── */
+.gua-facets-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:14px; text-align:left; }
+@media(max-width:520px){ .gua-facets-grid{ grid-template-columns:1fr; } }
+.gua-facet-card{ padding:12px 14px; border-radius:12px; border:1px solid rgba(232,200,115,.25); background:linear-gradient(180deg, rgba(232,200,115,.06), rgba(0,0,0,.16)); transition:all .2s ease; }
+.gua-facet-card.is-main{ border-color:rgba(232,200,115,.45); background:linear-gradient(180deg, rgba(232,200,115,.12), rgba(0,0,0,.22)); }
+.gua-facet-card.is-bian{ border-color:rgba(168,200,160,.4); background:linear-gradient(180deg, rgba(168,200,160,.08), rgba(0,0,0,.2)); }
+.gf-tag{ font-size:11px; letter-spacing:.12em; color:var(--gold-soft); margin-bottom:4px; font-weight:600; }
+.gf-name{ font-family:'Ma Shan Zheng',cursive; font-size:20px; color:var(--gold); margin-bottom:2px; }
+.gf-struct{ font-size:11px; color:#a89d84; margin-bottom:6px; }
+.gf-read{ font-size:12.5px; line-height:1.68; color:#f0e6cc; font-weight:300; }
+.gf-tip{ font-size:10.5px; color:#cfc6aa; opacity:.78; margin-top:6px; border-top:1px dashed rgba(232,200,115,.15); padding-top:4px; }
+
+body[data-theme="light"] .gua-facet-card{ background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,242,232,.95)); border-color:rgba(140,100,24,.22); box-shadow:0 4px 12px rgba(80,58,30,.06); }
+body[data-theme="light"] .gua-facet-card.is-main{ border-color:rgba(140,100,24,.38); background:rgba(140,100,24,.06); }
+body[data-theme="light"] .gua-facet-card.is-bian{ border-color:rgba(31,110,74,.3); background:rgba(31,110,74,.05); }
+body[data-theme="light"] .gf-tag{ color:#8c6418; }
+body[data-theme="light"] .gf-name{ color:#8c6418; }
+body[data-theme="light"] .gf-struct{ color:#7a6b54; }
+body[data-theme="light"] .gf-read{ color:#2a2015; }
+body[data-theme="light"] .gf-tip{ color:#6b583f; border-top-color:rgba(140,100,24,.18); }
+
+/* ─── 3. 八字地支藏干微胶囊 & 五行能量摘要 ─── */
+.pillar .pss-cang{ margin-top:8px; padding-top:6px; border-top:1px dashed rgba(232,200,115,.2); display:flex; flex-direction:column; gap:4px; align-items:center; min-height:50px; }
+.pillar .pss-cang .cg-item{ display:inline-flex; align-items:center; justify-content:center; gap:2px; font-size:9.5px; padding:2px 6px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(232,200,115,.16); white-space:nowrap; transition:all .15s ease; width:88%; box-sizing:border-box; }
+.pillar .pss-cang .cg-item.is-benqi{ background:rgba(232,200,115,.13); border-color:rgba(232,200,115,.38); font-weight:600; color:var(--gold); }
+.pillar .pss-cang .cg-stem{ font-weight:700; font-size:10px; margin-right:1px; }
+.pillar .pss-cang .cg-type{ font-size:8px; opacity:.65; margin-right:1px; font-style:normal; }
+.pillar .pss-cang .cg-ss{ font-size:9px; opacity:.85; }
+
+body[data-theme="light"] .pillar .pss-cang .cg-item{ background:rgba(140,100,24,.06); border-color:rgba(140,100,24,.18); color:#3d2f20; }
+body[data-theme="light"] .pillar .pss-cang .cg-item.is-benqi{ background:rgba(140,100,24,.12); border-color:rgba(140,100,24,.32); color:#8c6418; }
+
+.wx-summary-pills{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+.wx-sp-item{ font-size:11px; color:#dcd3bb; padding:3px 10px; border-radius:999px; background:rgba(232,200,115,.08); border:1px solid rgba(232,200,115,.22); display:inline-flex; align-items:center; gap:4px; }
+.wx-sp-item b{ color:var(--gold); }
+body[data-theme="light"] .wx-summary-pills .wx-sp-item{ background:rgba(140,100,24,.06); border-color:rgba(140,100,24,.2); color:#4e3f2e; }
+body[data-theme="light"] .wx-summary-pills .wx-sp-item b{ color:#8c6418; }
+
 </style>
 </head>
 <body data-board="sign" data-state="home">
@@ -767,6 +840,7 @@ body[data-theme="light"] .sh-date{ color:#8a7a60; }
     <div id="portal">
       <div id="tagline">每 日 一 签</div>
       <div id="ctxline"></div>
+      <div id="dailyResonance"></div>
       <input id="name" type="text" maxlength="8" placeholder="留下你的名字（可空）" autocomplete="off" spellcheck="false">
       <button id="draw">凝 神 求 签</button>
       <div id="diviningTip">凝神静气，感应天机…</div>
@@ -1634,7 +1708,33 @@ function wxRing(a,dg){
   return `<svg class="wx-ring" viewBox="0 0 120 120" aria-label="五行能量环"><circle class="wxr-track" r="46" cx="60" cy="60"></circle><g transform="rotate(-90 60 60)">${segs}</g>
     <text x="60" y="58" class="wxr-dg m-${WX_CLS[GAN_WX[dg]]}">${dg}</text><text x="60" y="78" class="wxr-lv">日主 · ${a.me}</text></svg>`;
 }
-function renderWx(a,dg){
+function renderWx(a,dg,ge){
+  const gejuObj = ge || (typeof lastGeju !== 'undefined' ? lastGeju : null);
+  const sortedWx = [...WX5].sort((x, y) => (a.pct[y] || 0) - (a.pct[x] || 0));
+  const maxW = sortedWx[0];
+  const minW = sortedWx[sortedWx.length - 1];
+  const isZero = (a.pct[minW] || 0) === 0;
+
+  const summaryPills = `
+    <div class="wx-summary-pills">
+      <div class="wx-summary-pill">
+        <span class="wsp-k">最旺五行</span>
+        <span class="wsp-v m-${WX_CLS[maxW]}">${maxW} <small>(${(a.pct[maxW]||0).toFixed(0)}%)</small></span>
+        <span class="wsp-d">${wxRole(a.me, maxW)} · 气势充盈</span>
+      </div>
+      <div class="wx-summary-pill">
+        <span class="wsp-k">${isZero ? '五行缺失' : '五行偏弱'}</span>
+        <span class="wsp-v m-${WX_CLS[minW]}">${minW} <small>(${(a.pct[minW]||0).toFixed(0)}%)</small></span>
+        <span class="wsp-d">${isZero ? '命局无明见 · 宜调和' : `${wxRole(a.me, minW)} · 气势较浅`}</span>
+      </div>
+      <div class="wx-summary-pill">
+        <span class="wsp-k">命性格局</span>
+        <span class="wsp-v" style="color:var(--gold)">${gejuObj ? gejuObj.name : '正格'}</span>
+        <span class="wsp-d">${gejuObj && gejuObj.subTag ? gejuObj.subTag : (gejuObj ? gejuObj.type : '顺天应时')}</span>
+      </div>
+    </div>
+  `;
+
   const mx=Math.max(...WX5.map(w=>a.pct[w]));
   const tag=w=> w===a.yong?'<em class="wx-tag t-yong">用</em>': w===a.xi?'<em class="wx-tag t-xi">喜</em>': a.ji.includes(w)?'<em class="wx-tag t-ji">忌</em>':'<em class="wx-tag"></em>';
   const rows=WX5.map(w=>`<div class="wx-row m-${WX_CLS[w]}${a.pct[w]<3?' dim':''}"><span class="wx-el">${w}</span><span class="wx-role">${wxRole(a.me,w)}</span><div class="wx-track"><i style="width:${(a.pct[w]/mx*100).toFixed(0)}%"></i></div><span class="wx-n">${a.pct[w].toFixed(0)}%</span>${tag(w)}</div>`).join('');
@@ -1644,6 +1744,7 @@ function renderWx(a,dg){
   const T=WX_TIPS;
   $('wxbar').innerHTML=`
     <div class="ss-h">五 行 能 量</div>
+    ${summaryPills}
     <div class="wx-flex">${wxRing(a,dg)}<div class="wx-rows">${rows}</div></div>
     ${a.inter.length?`<div class="wx-inter"><span class="wx-inter-h">合 · 冲</span>${a.inter.map(t=>`<span>${t}</span>`).join('')}</div>`:''}
     <div class="ss-h">日 主 强 弱</div>
@@ -1672,32 +1773,70 @@ const XuanProfiles = {
   save(list) {
     try { localStorage.setItem(PF_KEY, JSON.stringify(list)); } catch(e) {}
     this.render();
+    if (typeof renderDailyResonance === 'function') renderDailyResonance();
+  },
+  getPrimary() {
+    const list = this.getAll();
+    if (!list.length) return null;
+    const pid = localStorage.getItem('xuan_primary_profile_id');
+    if (pid) {
+      const found = list.find(p => String(p.id) === String(pid));
+      if (found) return found;
+    }
+    return list[0];
+  },
+  setPrimary(id) {
+    try { localStorage.setItem('xuan_primary_profile_id', String(id)); } catch(e) {}
+    this.render();
+    if (typeof renderDailyResonance === 'function') renderDailyResonance();
+  },
+  cyclePrimary() {
+    const list = this.getAll();
+    if (list.length <= 1) return;
+    const cur = this.getPrimary();
+    const idx = cur ? list.findIndex(p => String(p.id) === String(cur.id)) : -1;
+    const next = list[(idx + 1) % list.length];
+    if (next) this.setPrimary(next.id);
   },
   add(item) {
     const list = this.getAll();
     list.unshift(item);
     if (list.length > 20) list.pop();
     this.save(list);
+    this.setPrimary(item.id);
     return item;
   },
   remove(id) {
     const list = this.getAll().filter(p => String(p.id) !== String(id));
     this.save(list);
+    const curPri = localStorage.getItem('xuan_primary_profile_id');
+    if (String(curPri) === String(id)) {
+      if (list.length) this.setPrimary(list[0].id);
+      else {
+        localStorage.removeItem('xuan_primary_profile_id');
+        if (typeof renderDailyResonance === 'function') renderDailyResonance();
+      }
+    }
   },
   render() {
     const list = this.getAll();
+    const primary = this.getPrimary();
+    const primaryId = primary ? String(primary.id) : null;
     const chipsEl = $('pfChips');
     if (chipsEl) {
       if (!list.length) {
         chipsEl.innerHTML = '<span class="pf-empty">暂无存档。排完八字后点「+ 存为档案」，随时一键调出。</span>';
       } else {
-        chipsEl.innerHTML = list.map(p => `
-          <span class="pf-chip" data-id="${p.id}" title="${p.name} · ${p.sex} · ${p.y}年${p.m}月${p.d}日 ${p.h>=0?SHICHEN[p.h]+'时':'时辰不详'}">
-            <span>${p.name}</span>
+        chipsEl.innerHTML = list.map(p => {
+          const isPri = String(p.id) === primaryId;
+          return `
+          <span class="pf-chip${isPri ? ' is-primary' : ''}" data-id="${p.id}" title="${p.name} · ${p.sex} · ${p.y}年${p.m}月${p.d}日 ${p.h>=0?SHICHEN[p.h]+'时':'时辰不详'}${isPri ? '（当前流日共鸣主档案）' : ''}">
+            <span>${isPri ? '★ ' : ''}${p.name}</span>
             <span style="font-size:10px;opacity:.65">(${p.sex} ${p.y})</span>
             <span class="pf-del" data-del="${p.id}" title="删除档案">✕</span>
           </span>
-        `).join('');
+        `;
+        }).join('');
       }
     }
     ['hpPfSelA', 'hpPfSelB'].forEach(selId => {
@@ -1711,6 +1850,165 @@ const XuanProfiles = {
   }
 };
 window.XuanProfiles = XuanProfiles;
+
+/* ========= 今日时空共鸣 · 本命流日能量指引 ========= */
+const DR_SHISHEN = {
+  比肩: {
+    theme: '笃志澄心 · 自我锚定',
+    sub: '比肩星当值 · 独立专注',
+    brief: '今日流日引动比肩星，能量频率与你自身同频共振。宜依循本心节奏，不受外物纷扰；专注打理独立事务或与同好知己轻语交心，笃定前行。',
+    yi: '独立推进、内观定心',
+    ji: '固执己见、无谓争胜'
+  },
+  劫财: {
+    theme: '破局敏行 · 气象一新',
+    sub: '劫财星入局 · 魄力突围',
+    brief: '今日流日劫财星活跃，敏锐度与决断力格外丰沛。宜主动破除陈规惯性、拓宽思路，或以利他分享流通能量。遇琐碎摩擦一笑置之，自显开阖之气。',
+    yi: '主动分享、打破惯性',
+    ji: '冲动消费、硬碰较劲'
+  },
+  食神: {
+    theme: '润泽适意 · 才情萌发',
+    sub: '食神星照拂 · 舒展灵性',
+    brief: '今日流日食神入位，身心舒展如沐春风，感官与审美极佳。宜品尝佳肴、赏心悦目、记录灵感或从容创作。在松弛宁静中，美好的事物自会悄然生长。',
+    yi: '品味生活、捕捉灵感',
+    ji: '拖沓散漫、过虑贪求'
+  },
+  伤官: {
+    theme: '灵秀破格 · 锋芒内敛',
+    sub: '伤官星高照 · 巧思独具',
+    brief: '今日流日伤官星照耀，思维如电，善于见他人未见、发他人未发。宜集中攻坚创意设计或头脑风暴；言辞举止多一份温厚柔和，锋芒藏于内，成事于无形。',
+    yi: '巧思创新、深度攻坚',
+    ji: '辞锋犀利、硬顶规矩'
+  },
+  偏财: {
+    theme: '机敏乘风 · 活泛通达',
+    sub: '偏财星引动 · 广纳良机',
+    brief: '今日流日偏财主令，机缘与信息流动极快，对外界变化感知敏锐。宜跳出局限拓展人际、探索新模式、活化现有资源。见好就收，保持轻盈灵活。',
+    yi: '顺应变化、联络机缘',
+    ji: '贪多冒进、分心走神'
+  },
+  正财: {
+    theme: '笃实耕耘 · 秩序井然',
+    sub: '正财星司命 · 稳健扎根',
+    brief: '今日流日正财星主导，散发大地般的沉着与安心。宜按部就班理清待办事项、整理账目或打磨手头细节。步步踏实，每一分耐性都在为你积累真实的厚重底气。',
+    yi: '整理细节、脚踏实地',
+    ji: '急躁冒进、眼高手低'
+  },
+  七杀: {
+    theme: '勇毅当先 · 气魄立威',
+    sub: '七杀星临值 · 淬炼意志',
+    brief: '今日流日七杀星降临，气势凌厉，是直面挑战、攻克坚冰的极佳窗口。宜快刀斩乱麻处理积压难事、明确底线界限。守住呼吸与从容，压力即是蜕变的养分。',
+    yi: '迎难而上、立清边界',
+    ji: '焦躁上火、意气用事'
+  },
+  正官: {
+    theme: '恪正秉心 · 礼序有常',
+    sub: '正官星垂照 · 泰然端正',
+    brief: '今日流日正官星垂照，正气充盈，理智与自律兼备。宜向上汇报沟通、拟定章程标准、出席正式事务或复盘生活节奏。行得正、立得稳，自得长久信任与敬重。',
+    yi: '恪守规范、从容应对',
+    ji: '刻板较真、苛责自我'
+  },
+  偏印: {
+    theme: '玄鉴内省 · 幽微洞察',
+    sub: '偏印星隐现 · 探骊得珠',
+    brief: '今日流日偏印（枭神）星浮现，直觉与洞察力格外透彻。宜静心钻研精深学问、哲思玄理或享受私密独处。若偶感疏离，不妨听听舒缓白噪音，让神思回归安详。',
+    yi: '静思深研、向内觉照',
+    ji: '胡思乱想、敏感多疑'
+  },
+  正印: {
+    theme: '涵养润泽 · 心安德厚',
+    sub: '正印星庇佑 · 丰盈宁谧',
+    brief: '今日流日正印星庇护，如慈母在侧，心境宽厚安和。极适宜阅读经典、向善知识请益、身心修养或欣然接纳外界的善意。以温润之德润物，福泽自然丰沛。',
+    yi: '读书养心、接纳善意',
+    ji: '过度依赖、怠惰安逸'
+  }
+};
+
+function renderDailyResonance() {
+  const box = $('dailyResonance');
+  if (!box) return;
+  const dt = new Date(), ty = dt.getFullYear(), tm = dt.getMonth() + 1, td = dt.getDate();
+  const tDg = dayGan(ty, tm, td), tDz = dayZhi(ty, tm, td), tGz = tDg + tDz;
+  const tJc = jcOf(ty, tm, td);
+  const p = XuanProfiles.getPrimary();
+  const allProfiles = XuanProfiles.getAll();
+
+  if (!p) {
+    const jcObj = JC_DATA[tJc] || { vibe: '天地清宁，顺应自然节律', yi: '静心、从容', ji: '盲动', lv: '平' };
+    box.innerHTML = `
+      <div class="daily-resonance">
+        <div class="dr-top">
+          <span class="dr-badge">✦ 今日时空能量 · 顺天应时 ✦</span>
+          <button class="dr-profile-btn" onclick="document.querySelectorAll('#nav button')[1].click(); $('by').focus();">+ 绑定本命档案</button>
+        </div>
+        <div class="dr-theme-wrap">
+          <span class="dr-theme">时空呼吸 · ${tJc}日气象</span>
+          <span class="dr-sub">${tGz}日（${GAN_WX[tDg]}${ZHI_WX[tDz]}）· ${jcObj.lv}</span>
+        </div>
+        <div class="dr-brief">今日岁次流转至【${tGz}】日，值【${tJc}】日。${jcObj.vibe}。在「八字排盘」中存入个人命盘，即可开启专属于你本命日主的「流日时空共鸣」。</div>
+        <div class="dr-chips">
+          <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
+          <span class="dr-chip"><b>值神</b>${tJc}日</span>
+          <span class="dr-chip"><b>宜</b>${jcObj.yi}</span>
+          <span class="dr-chip"><b>忌</b>${jcObj.ji}</span>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const meDg = dayGan(p.y, p.m, p.d);
+  const meDz = dayZhi(p.y, p.m, p.d);
+  const ss = shishen(meDg, tDg) || '比肩';
+  const info = DR_SHISHEN[ss] || DR_SHISHEN['比肩'];
+  const meWx = GAN_WX[meDg];
+
+  let branchTip = '';
+  if (pk(meDz, tDz, ZHI_LIUHE)) {
+    branchTip = `<span class="dr-chip" style="background:rgba(201,162,77,0.14);border-color:rgba(201,162,77,0.35)"><b>六合吉契</b>日支【${meDz}】与流日【${tDz}】合 · 合作顺遂、贵人相惜</span>`;
+  } else if (pk(meDz, tDz, ZHI_CHONG)) {
+    branchTip = `<span class="dr-chip" style="background:rgba(217,90,75,0.10);border-color:rgba(217,90,75,0.3)"><b>逢冲调息</b>日支【${meDz}】与流日【${tDz}】冲 · 宜放缓节奏、出行定神</span>`;
+  } else if (meDz === tDz) {
+    branchTip = `<span class="dr-chip"><b>支逢同气</b>日支【${meDz}】与流日同气 · 踏实内守</span>`;
+  } else {
+    const jcObj = JC_DATA[tJc];
+    branchTip = `<span class="dr-chip"><b>值神</b>【${tJc}】日 · ${jcObj ? jcObj.vibe : '天人和谐'}</span>`;
+  }
+
+  const switchAction = allProfiles.length > 1
+    ? 'XuanProfiles.cyclePrimary()'
+    : 'document.querySelectorAll(\x27#nav button\x27)[1].click()';
+  const switchTitle = allProfiles.length > 1
+    ? '点击切换当前案卷主档案'
+    : '点击前往八字排盘查看命盘';
+  const switchLabel = allProfiles.length > 1
+    ? `${p.name}（${meDg}${meWx}）⇄ 切换`
+    : `${p.name}（${meDg}${meWx}）`;
+
+  box.innerHTML = `
+    <div class="daily-resonance">
+      <div class="dr-top">
+        <span class="dr-badge">✦ 今日时空共鸣 · 本命能量指引 ✦</span>
+        <button class="dr-profile-btn" onclick="${switchAction}" title="${switchTitle}">${switchLabel}</button>
+      </div>
+      <div class="dr-theme-wrap">
+        <span class="dr-theme">${info.theme}</span>
+        <span class="dr-sub">${info.sub}</span>
+      </div>
+      <div class="dr-brief">${info.brief}</div>
+      <div class="dr-chips">
+        <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
+        <span class="dr-chip"><b>本命日主</b>${p.name} · ${meDg}${meWx}</span>
+        <span class="dr-chip"><b>时空主星</b>${ss}</span>
+        ${branchTip}
+        <span class="dr-chip"><b>宜</b>${info.yi}</span>
+        <span class="dr-chip"><b>忌</b>${info.ji}</span>
+      </div>
+    </div>
+  `;
+}
+window.renderDailyResonance = renderDailyResonance;
 
 (function initBazi(){
   const by=$('by'),bm=$('bm'),bd=$('bd'),bh=$('bh');
@@ -1742,9 +2040,11 @@ window.XuanProfiles = XuanProfiles;
     $('pillars').innerHTML=pillars.map(p=>{
       const k=p[0],gg=p[1],zz=p[2], wxg=gg==='—'?'':GAN_WX[gg], wxz=zz==='—'?'':ZHI_WX[zz];
       const gSS = k==='日' ? '<span class="is-me">日元</span>' : (gg==='—' ? '' : (shishen(dg, gg) || ''));
-      const cangs = (CANG[zz] || []).map(([cg]) => {
+      const cangs = (CANG[zz] || []).map(([cg], cIdx) => {
         const ss = shishen(dg, cg);
-        return `<span class="cg-item">${cg}<b class="cg-ss">${ss ? ss.slice(0, 2) : ''}</b></span>`;
+        const typeLabel = cIdx === 0 ? '本' : (cIdx === 1 ? '中' : '余');
+        const wxCls = WX_CLS[GAN_WX[cg]] || 'earth';
+        return `<span class="cg-item${cIdx===0?' is-benqi':''} m-${wxCls}"><b class="cg-stem">${cg}</b><i class="cg-type">${typeLabel}</i><b class="cg-ss">${ss ? ss.slice(0, 2) : ''}</b></span>`;
       }).join('');
       return `<div class="pillar">
         <div class="pss-gan">${gSS}</div>
@@ -1776,7 +2076,7 @@ window.XuanProfiles = XuanProfiles;
         <div class="geju-tip"><b>格局要义：</b>${ge.tip}</div>
       </div>`;
     }
-    renderWx(wa,dg);
+    renderWx(wa,dg,ge);
     const rawHits=analyzeShenshaAll({yg,yz,mg,mz,dg,dz,tg,tz});
     const sGrouped=[]; const sMap=new Map();
     rawHits.forEach(h=>{
@@ -1842,6 +2142,7 @@ window.XuanProfiles = XuanProfiles;
       const id = chip.getAttribute('data-id');
       const p = XuanProfiles.getAll().find(x => String(x.id) === String(id));
       if (!p) return;
+      XuanProfiles.setPrimary(p.id);
       sex = p.sex;
       document.querySelectorAll('#sex button').forEach(b => b.classList.toggle('on', b.dataset.s === sex));
       by.value = p.y;
@@ -1900,6 +2201,7 @@ window.XuanProfiles = XuanProfiles;
     });
   }
   XuanProfiles.render();
+  if (typeof renderDailyResonance === 'function') renderDailyResonance();
 })();
 
 /* 正缘 · 深度解读（AI，含 5 视角 + 安全框；阶段①支持 BYOK 体验） */
@@ -2380,7 +2682,10 @@ $('tdraw').addEventListener('click',()=>{ tDrawSet(); renderTarot(); });
 setTMode('daily');
 
 document.querySelectorAll('#nav button').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b)); document.body.dataset.board=b.dataset.b; }));
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.body.dataset.board=b.dataset.b;
+  if(b.dataset.b==='sign' && typeof renderDailyResonance==='function') renderDailyResonance();
+}));
 
 /* 3D 磁力倾斜 + 跟随指针的微光（材质真实感） */
 function initTilt(el, maxDeg){ if(!el||el._tilt)return; el._tilt=1; maxDeg=maxDeg||9;
@@ -2517,10 +2822,55 @@ function loop(){
     $('guaName').textContent=''; $('guaJudg').textContent=''; $('guaRead').innerHTML=''; $('guaBian').innerHTML='';
     busy=true; const rows=$('guaSym').querySelectorAll('.gua-line'); rows.forEach((el,k)=> setTimeout(()=>el.classList.add('show'),(5-k)*140));
     setTimeout(()=>{ $('guaName').textContent=main.name+'卦'; $('guaJudg').textContent=main.judg; $('guaRead').innerHTML='〈'+main.up+'上 '+main.lo+'下〉　'+main.read;
-      let h=''; if(chgIdx.length){ const bb=HEX[binOf(ls,true)]; h='<b>本卦</b> '+main.name+'卦　→　<b>变卦</b> '+bb.name+'卦<br>'+chgIdx.map(i=>'· '+YAOPOS[i]+' 动').join('<br>')+'<br>事情将朝「'+bb.name+'」的方向变化：'+bb.read; }
+      const bb = chgIdx.length ? HEX[binOf(ls,true)] : null;
+      // 互卦：二三四爻为下卦，三四五爻为上卦
+      const huBin = [ls[1], ls[2], ls[3], ls[2], ls[3], ls[4]].map(l => l.yang ? '1' : '0').join('');
+      const hu = HEX[huBin] || main;
+      // 综卦 / 错卦：颠倒上下爻序为综卦；若卦形对称（八纯卦等），则取错卦（全爻阴阳对转）
+      const zongBin = ls.slice().reverse().map(l => l.yang ? '1' : '0').join('');
+      const mainBin = binOf(ls, false);
+      let zo = null, zoTag = '✦ 综卦 · 换位反观';
+      if (zongBin !== mainBin && HEX[zongBin]) {
+        zo = HEX[zongBin];
+      } else {
+        const cuoBin = ls.map(l => l.yang ? '0' : '1').join('');
+        zo = HEX[cuoBin] || main;
+        zoTag = '✦ 错卦 · 相对全息';
+      }
+
+      const facetsHtml = `
+        <div class="gua-facets-grid">
+          <div class="gua-facet-card is-main">
+            <span class="gfc-tag">✦ 本卦 · 当下事态</span>
+            <div class="gfc-name">${main.name}卦</div>
+            <div class="gfc-structure">〈${main.up}上 ${main.lo}下〉· ${main.judg}</div>
+            <div class="gfc-meaning">${main.read}</div>
+          </div>
+          <div class="gua-facet-card">
+            <span class="gfc-tag">✦ 变卦 · 未来动向</span>
+            <div class="gfc-name">${bb ? bb.name + '卦' : '静卦不变'}</div>
+            <div class="gfc-structure">${bb ? `〈${bb.up}上 ${bb.lo}下〉· ${bb.judg}` : '六爻无动 · 气机自守'}</div>
+            <div class="gfc-meaning">${bb ? bb.read : '当前事态平稳持重，无急剧转折，从容安住当下即可。'}</div>
+          </div>
+          <div class="gua-facet-card">
+            <span class="gfc-tag">✦ 互卦 · 内在转折</span>
+            <div class="gfc-name">${hu.name}卦</div>
+            <div class="gfc-structure">〈${hu.up}上 ${hu.lo}下〉· ${hu.judg}</div>
+            <div class="gfc-meaning">${hu.read}</div>
+          </div>
+          <div class="gua-facet-card">
+            <span class="gfc-tag">${zoTag}</span>
+            <div class="gfc-name">${zo.name}卦</div>
+            <div class="gfc-structure">〈${zo.up}上 ${zo.lo}下〉· ${zo.judg}</div>
+            <div class="gfc-meaning">${zo.read}</div>
+          </div>
+        </div>
+      `;
+
+      let h=''; if(chgIdx.length){ h='<b>本卦</b> '+main.name+'卦　→　<b>变卦</b> '+bb.name+'卦<br>'+chgIdx.map(i=>'· '+YAOPOS[i]+' 动').join('<br>')+'<br>事情将朝「'+bb.name+'」的方向变化：'+bb.read; }
       else h='<b>静卦</b>（无动爻）—— 此事暂稳，守住当下即可。';
       if(set.ty) h+='<br><br><b>体用</b>：'+set.ty;
-      $('guaBian').innerHTML=h;
+      $('guaBian').innerHTML=h + facetsHtml;
       if($('guaProChk').checked){ $('guaPro').style.display='block'; $('guaPro').innerHTML='<div class="gp-h">六 爻 装 卦</div>'+zhuangGua(main.lo,main.up,ls)+'<div class="gp-note">纳甲地支 + 京房八宫世应 + 六亲，纯算法推算（已核对古籍）。用神取舍因事而异，留待自参。</div>'; }
       else $('guaPro').style.display='none';
       if (window.XuanAudio) window.XuanAudio.playChime();
