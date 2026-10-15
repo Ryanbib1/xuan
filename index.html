@@ -721,36 +721,64 @@ body[data-theme="light"] .sh-name{ color:#8c6418; }
 body[data-theme="light"] .sh-poem{ color:#4e3f2e; }
 body[data-theme="light"] .sh-date{ color:#8a7a60; }
 
-/* ─── 1. 今日时空共鸣 · 流日能量卡 (Co-Star Style Daily Pulse) ─── */
-.daily-resonance{ width:100%; max-width:440px; margin:14px auto 16px; padding:14px 16px; border-radius:14px; border:1px solid rgba(232,200,115,.32); background:linear-gradient(180deg, rgba(232,200,115,.08), rgba(0,0,0,.22)); box-shadow:0 8px 24px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08); text-align:left; box-sizing:border-box; transition:all .25s ease; }
+/* ─── 1. 今日时空共鸣 · 极简胶囊按钮 + 可折叠能量卡 (Co-Star Style Daily Pulse) ─── */
+.dr-wrap{ width:100%; max-width:440px; margin:8px auto 14px; text-align:center; }
+.dr-pill-btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:5px 16px; border-radius:999px; background:rgba(232,200,115,.08); border:1px solid rgba(232,200,115,.28); color:var(--gold,#e8c873); font-size:12px; font-weight:500; cursor:pointer; transition:all .2s ease; box-shadow:0 2px 10px rgba(0,0,0,.14); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); user-select:none; }
+.dr-pill-btn:hover{ background:rgba(232,200,115,.16); border-color:rgba(232,200,115,.48); box-shadow:0 4px 14px rgba(232,200,115,.2); transform:translateY(-1px); }
+.dr-pill-btn:active{ transform:translateY(0); }
+.dr-pill-btn .dr-icon{ font-size:11px; color:var(--gold-soft,#f0d58c); }
+.dr-pill-btn .dr-label{ letter-spacing:.03em; }
+.dr-pill-btn .dr-tag{ font-size:10px; opacity:.85; padding:1px 6px; border-radius:4px; background:rgba(232,200,115,.12); border:1px solid rgba(232,200,115,.22); }
+.dr-pill-btn .dr-arrow{ font-size:10px; opacity:.75; display:inline-block; transition:transform .25s ease; margin-left:1px; }
+.dr-pill-btn.is-open .dr-arrow{ transform:rotate(180deg); }
+
+/* 折叠展开的抽屉卡片 */
+.dr-drawer{ max-height:0; opacity:0; overflow:hidden; transition:max-height .32s cubic-bezier(0.2, 0.9, 0.3, 1), opacity .25s ease, margin .25s ease; margin-top:0; pointer-events:none; }
+.dr-drawer.is-open{ max-height:600px; opacity:1; margin-top:10px; pointer-events:auto; }
+.dr-drawer .daily-resonance{ margin:0 auto; }
+.dr-close-btn{ background:none; border:none; color:#a89d84; font-size:11px; cursor:pointer; padding:2px 6px; border-radius:4px; transition:color .15s; }
+.dr-close-btn:hover{ color:var(--gold); }
+
+.daily-resonance{ width:100%; max-width:440px; margin:0 auto; padding:14px 16px; border-radius:14px; border:1px solid rgba(232,200,115,.32); background:linear-gradient(180deg, rgba(232,200,115,.08), rgba(0,0,0,.22)); box-shadow:0 8px 24px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08); text-align:left; box-sizing:border-box; transition:all .25s ease; }
 .dr-top{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:8px; border-bottom:1px solid rgba(232,200,115,.16); padding-bottom:7px; }
 .dr-badge{ font-size:11px; letter-spacing:.15em; color:var(--gold-soft); font-weight:600; display:flex; align-items:center; gap:4px; }
 .dr-date{ font-size:11px; color:#a89d84; }
 .dr-profile-switch{ font-size:11px; color:var(--gold); cursor:pointer; background:rgba(232,200,115,.1); padding:2px 8px; border-radius:999px; border:1px solid rgba(232,200,115,.28); transition:all .15s ease; }
 .dr-profile-switch:hover{ background:rgba(232,200,115,.2); }
+.dr-profile-btn{ background:rgba(232,200,115,.1); border:1px solid rgba(232,200,115,.28); border-radius:999px; padding:2px 8px; font-size:11px; cursor:pointer; color:var(--gold); transition:all .15s ease; }
+.dr-profile-btn:hover{ background:rgba(232,200,115,.2); }
 .dr-core{ margin:8px 0; }
 .dr-theme-wrap{ display:flex; align-items:baseline; gap:8px; margin-bottom:5px; }
-.dr-theme-ss{ font-size:12px; color:var(--jade); background:rgba(168,200,160,.12); padding:1px 7px; border-radius:4px; border:1px solid rgba(168,200,160,.28); font-weight:600; }
-.dr-theme-word{ font-family:'Ma Shan Zheng',cursive; font-size:22px; color:var(--gold); letter-spacing:.06em; text-shadow:0 0 10px rgba(232,200,115,.35); }
-.dr-pulse-text{ font-size:13px; line-height:1.75; color:#f0e6cc; margin:0 0 8px; font-weight:300; }
+.dr-theme{ font-family:'Ma Shan Zheng',cursive; font-size:22px; color:var(--gold); letter-spacing:.06em; text-shadow:0 0 10px rgba(232,200,115,.35); }
+.dr-sub{ font-size:12px; color:var(--jade, #a8c8a0); background:rgba(168,200,160,.12); padding:1px 7px; border-radius:4px; border:1px solid rgba(168,200,160,.28); font-weight:600; }
+.dr-brief{ font-size:13px; line-height:1.75; color:#f0e6cc; margin:0 0 8px; font-weight:300; }
 .dr-rel-note{ font-size:11.5px; color:var(--gold-soft); line-height:1.55; margin-bottom:8px; padding:4px 8px; border-radius:6px; background:rgba(232,200,115,.06); }
 .dr-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
 .dr-chip{ font-size:10.5px; padding:2px 8px; border-radius:999px; border:1px solid rgba(232,200,115,.2); background:rgba(255,255,255,.03); color:#dcd3bb; white-space:nowrap; }
+.dr-chip b{ color:var(--gold); font-weight:600; margin-right:3px; }
 .dr-chip.c-mind{ border-color:rgba(168,200,160,.35); color:#c4e2bd; }
 .dr-chip.c-focus{ border-color:rgba(232,200,115,.35); color:var(--gold); }
 .dr-chip.c-yi{ border-color:rgba(168,200,160,.4); color:#b5e0ab; }
 .dr-chip.c-ji{ border-color:rgba(217,90,75,.35); color:#f2a79d; }
 
+body[data-theme="light"] .dr-pill-btn{ background:rgba(140,100,24,.07); border-color:rgba(140,100,24,.24); color:#8c6418; box-shadow:0 2px 8px rgba(80,58,30,.06); }
+body[data-theme="light"] .dr-pill-btn:hover{ background:rgba(140,100,24,.13); border-color:rgba(140,100,24,.4); box-shadow:0 4px 14px rgba(140,100,24,.15); }
+body[data-theme="light"] .dr-pill-btn .dr-tag{ background:rgba(140,100,24,.08); border-color:rgba(140,100,24,.18); }
+body[data-theme="light"] .dr-close-btn{ color:#8a7a60; }
+body[data-theme="light"] .dr-close-btn:hover{ color:#8c6418; }
+body[data-theme="light"] .dr-profile-btn{ background:rgba(140,100,24,.08); border-color:rgba(140,100,24,.22); color:#8c6418; }
 body[data-theme="light"] .daily-resonance{ background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(247,242,232,.96)); border-color:rgba(140,100,24,.28); box-shadow:0 6px 20px rgba(80,58,30,.08); }
 body[data-theme="light"] .dr-top{ border-bottom-color:rgba(140,100,24,.15); }
 body[data-theme="light"] .dr-badge{ color:#8c6418; }
 body[data-theme="light"] .dr-date{ color:#7a6b54; }
 body[data-theme="light"] .dr-profile-switch{ color:#8c6418; background:rgba(140,100,24,.08); border-color:rgba(140,100,24,.22); }
-body[data-theme="light"] .dr-theme-ss{ color:#1f6e4a; background:rgba(31,110,74,.08); border-color:rgba(31,110,74,.25); }
-body[data-theme="light"] .dr-theme-word{ color:#8c6418; text-shadow:none; }
+body[data-theme="light"] .dr-theme{ color:#8c6418; text-shadow:none; }
+body[data-theme="light"] .dr-sub{ color:#1f6e4a; background:rgba(31,110,74,.08); border-color:rgba(31,110,74,.25); }
 body[data-theme="light"] .dr-pulse-text{ color:#2a2015; }
+body[data-theme="light"] .dr-brief{ color:#2a2015; }
 body[data-theme="light"] .dr-rel-note{ background:rgba(140,100,24,.06); color:#765014; }
 body[data-theme="light"] .dr-chip{ background:rgba(140,100,24,.05); border-color:rgba(140,100,24,.18); color:#4e3f2e; }
+body[data-theme="light"] .dr-chip b{ color:#8c6418; }
 body[data-theme="light"] .dr-chip.c-mind{ color:#1f6e4a; border-color:rgba(31,110,74,.28); }
 body[data-theme="light"] .dr-chip.c-focus{ color:#8c6418; border-color:rgba(140,100,24,.3); }
 body[data-theme="light"] .dr-chip.c-yi{ color:#18613f; border-color:rgba(31,110,74,.3); }
@@ -1925,6 +1953,21 @@ const DR_SHISHEN = {
   }
 };
 
+let isDrExpanded = false;
+function toggleDailyResonance(forceState) {
+  if (typeof forceState === 'boolean') isDrExpanded = forceState;
+  else isDrExpanded = !isDrExpanded;
+  if (window.XuanAudio) window.XuanAudio.playFlip();
+  const drawer = $('drDrawer');
+  const btn = $('drPillBtn');
+  if (drawer && btn) {
+    drawer.classList.toggle('is-open', isDrExpanded);
+    btn.classList.toggle('is-open', isDrExpanded);
+    btn.setAttribute('aria-expanded', String(isDrExpanded));
+  }
+}
+window.toggleDailyResonance = toggleDailyResonance;
+
 function renderDailyResonance() {
   const box = $('dailyResonance');
   if (!box) return;
@@ -1936,22 +1979,38 @@ function renderDailyResonance() {
 
   if (!p) {
     const jcObj = JC_DATA[tJc] || { vibe: '天地清宁，顺应自然节律', yi: '静心、从容', ji: '盲动', lv: '平' };
+    const pillLabel = `今日时空能量 · ${tJc}日气象`;
+    const pillTag = '顺天应时';
+
     box.innerHTML = `
-      <div class="daily-resonance">
-        <div class="dr-top">
-          <span class="dr-badge">✦ 今日时空能量 · 顺天应时 ✦</span>
-          <button class="dr-profile-btn" onclick="document.querySelectorAll('#nav button')[1].click(); $('by').focus();">+ 绑定本命档案</button>
-        </div>
-        <div class="dr-theme-wrap">
-          <span class="dr-theme">时空呼吸 · ${tJc}日气象</span>
-          <span class="dr-sub">${tGz}日（${GAN_WX[tDg]}${ZHI_WX[tDz]}）· ${jcObj.lv}</span>
-        </div>
-        <div class="dr-brief">今日岁次流转至【${tGz}】日，值【${tJc}】日。${jcObj.vibe}。在「八字排盘」中存入个人命盘，即可开启专属于你本命日主的「流日时空共鸣」。</div>
-        <div class="dr-chips">
-          <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
-          <span class="dr-chip"><b>值神</b>${tJc}日</span>
-          <span class="dr-chip"><b>宜</b>${jcObj.yi}</span>
-          <span class="dr-chip"><b>忌</b>${jcObj.ji}</span>
+      <div class="dr-wrap">
+        <button id="drPillBtn" class="dr-pill-btn${isDrExpanded ? ' is-open' : ''}" aria-expanded="${isDrExpanded}" onclick="toggleDailyResonance()" title="${isDrExpanded ? '点击收起今日时空能量' : '点击展开今日时空能量'}">
+          <span class="dr-icon">✦</span>
+          <span class="dr-label">${pillLabel}</span>
+          <span class="dr-tag">${pillTag}</span>
+          <span class="dr-arrow">▾</span>
+        </button>
+        <div id="drDrawer" class="dr-drawer${isDrExpanded ? ' is-open' : ''}">
+          <div class="daily-resonance">
+            <div class="dr-top">
+              <span class="dr-badge">✦ 今日时空能量 · 顺天应时 ✦</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <button class="dr-profile-btn" onclick="document.querySelectorAll('#nav button')[1].click(); $('by').focus();">+ 绑定本命档案</button>
+                <button class="dr-close-btn" onclick="toggleDailyResonance(false)" title="收起卡片">收起 ▴</button>
+              </div>
+            </div>
+            <div class="dr-theme-wrap">
+              <span class="dr-theme">时空呼吸 · ${tJc}日气象</span>
+              <span class="dr-sub">${tGz}日（${GAN_WX[tDg]}${ZHI_WX[tDz]}）· ${jcObj.lv}</span>
+            </div>
+            <div class="dr-brief">今日岁次流转至【${tGz}】日，值【${tJc}】日。${jcObj.vibe}。在「八字排盘」中存入个人命盘，即可开启专属于你本命日主的「流日时空共鸣」。</div>
+            <div class="dr-chips">
+              <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
+              <span class="dr-chip"><b>值神</b>${tJc}日</span>
+              <span class="dr-chip"><b>宜</b>${jcObj.yi}</span>
+              <span class="dr-chip"><b>忌</b>${jcObj.ji}</span>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -1986,24 +2045,40 @@ function renderDailyResonance() {
     ? `${p.name}（${meDg}${meWx}）⇄ 切换`
     : `${p.name}（${meDg}${meWx}）`;
 
+  const pillLabel = `本命流日共鸣 · ${p.name}`;
+  const pillTag = `${ss} · ${meDg}${meWx}`;
+
   box.innerHTML = `
-    <div class="daily-resonance">
-      <div class="dr-top">
-        <span class="dr-badge">✦ 今日时空共鸣 · 本命能量指引 ✦</span>
-        <button class="dr-profile-btn" onclick="${switchAction}" title="${switchTitle}">${switchLabel}</button>
-      </div>
-      <div class="dr-theme-wrap">
-        <span class="dr-theme">${info.theme}</span>
-        <span class="dr-sub">${info.sub}</span>
-      </div>
-      <div class="dr-brief">${info.brief}</div>
-      <div class="dr-chips">
-        <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
-        <span class="dr-chip"><b>本命日主</b>${p.name} · ${meDg}${meWx}</span>
-        <span class="dr-chip"><b>时空主星</b>${ss}</span>
-        ${branchTip}
-        <span class="dr-chip"><b>宜</b>${info.yi}</span>
-        <span class="dr-chip"><b>忌</b>${info.ji}</span>
+    <div class="dr-wrap">
+      <button id="drPillBtn" class="dr-pill-btn${isDrExpanded ? ' is-open' : ''}" aria-expanded="${isDrExpanded}" onclick="toggleDailyResonance()" title="${isDrExpanded ? '点击收起今日能量指引' : '点击展开今日时空共鸣指引'}">
+        <span class="dr-icon">✦</span>
+        <span class="dr-label">${pillLabel}</span>
+        <span class="dr-tag">${pillTag}</span>
+        <span class="dr-arrow">▾</span>
+      </button>
+      <div id="drDrawer" class="dr-drawer${isDrExpanded ? ' is-open' : ''}">
+        <div class="daily-resonance">
+          <div class="dr-top">
+            <span class="dr-badge">✦ 今日时空共鸣 · 本命能量指引 ✦</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="dr-profile-btn" onclick="${switchAction}" title="${switchTitle}">${switchLabel}</button>
+              <button class="dr-close-btn" onclick="toggleDailyResonance(false)" title="收起卡片">收起 ▴</button>
+            </div>
+          </div>
+          <div class="dr-theme-wrap">
+            <span class="dr-theme">${info.theme}</span>
+            <span class="dr-sub">${info.sub}</span>
+          </div>
+          <div class="dr-brief">${info.brief}</div>
+          <div class="dr-chips">
+            <span class="dr-chip"><b>流日</b>${tGz}（${GAN_WX[tDg]}${ZHI_WX[tDz]}）</span>
+            <span class="dr-chip"><b>本命日主</b>${p.name} · ${meDg}${meWx}</span>
+            <span class="dr-chip"><b>时空主星</b>${ss}</span>
+            ${branchTip}
+            <span class="dr-chip"><b>宜</b>${info.yi}</span>
+            <span class="dr-chip"><b>忌</b>${info.ji}</span>
+          </div>
+        </div>
       </div>
     </div>
   `;
